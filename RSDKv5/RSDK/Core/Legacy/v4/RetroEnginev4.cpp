@@ -104,7 +104,6 @@ bool32 RSDK::Legacy::v4::LoadGameConfig(const char *filepath)
             strcpy(scene->name, "_RSDK_SCENE");
             strcpy(scene->folder, currentSceneFolder);
             strcpy(scene->id, currentSceneID);
-            scene->filter = sceneInfo.filter;
             GEN_HASH_MD5(scene->name, scene->hash);
 
             // Override existing values
@@ -571,8 +570,6 @@ void RSDK::Legacy::v4::LoadXMLStages(const tinyxml2::XMLElement *gameElement)
                 GEN_HASH_MD5(scene->name, scene->hash);
                 sprintf_s(scene->folder, sizeof(scene->folder), "%s", stgFolder);
                 sprintf_s(scene->id, sizeof(scene->id), "%s", stgID);
-
-                scene->filter = 0xFF;
 
                 list->sceneCount++;
                 list->sceneOffsetEnd++;

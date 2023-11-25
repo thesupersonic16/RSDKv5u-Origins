@@ -3,9 +3,7 @@
 struct SteamAchievements : UserAchievements {
     void TryUnlockAchievement(AchievementID *id)
     {
-        if (name) {
-            // try unlock a steam achievement
-        }
+        // try unlock a steam achievement
     }
 };
 

@@ -43,7 +43,6 @@ static GameSpriteFrameType GameSpriteFrame;
 struct SpriteFrame : public GameSpriteFrameType {
     typedef decltype(GameSpriteFrame) frame;
 
-    uint8 hitboxCount;
     Hitbox hitboxes[FRAMEHITBOX_COUNT];
 };
 

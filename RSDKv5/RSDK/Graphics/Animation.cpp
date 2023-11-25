@@ -93,7 +93,6 @@ uint16 RSDK::LoadSpriteAnimation(const char *filePath, uint8 scope)
                 frame->pivotX      = ReadInt16(&info);
                 frame->pivotY      = ReadInt16(&info);
 
-                frame->hitboxCount = hitboxCount;
                 for (int32 h = 0; h < hitboxCount; ++h) {
                     frame->hitboxes[h].left   = ReadInt16(&info);
                     frame->hitboxes[h].top    = ReadInt16(&info);

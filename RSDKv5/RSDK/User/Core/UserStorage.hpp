@@ -245,6 +245,10 @@ inline bool32 TrySaveUserFile(const char *filename, void *buffer, uint32 size, v
 {
     return userStorage->TrySaveUserFile(filename, buffer, size, callback, compressed);
 }
+inline bool32 TrySaveUserFileHE(const char *filename, void *buffer, uint32 size, bool32 compressed, void (*callback)(int32 status))
+{
+    return TrySaveUserFile(filename, buffer, size, callback, compressed);
+}
 inline bool32 TryDeleteUserFile(const char *filename, void (*callback)(int32 status)) { return userStorage->TryDeleteUserFile(filename, callback); }
 inline void ClearPrerollErrors() { userStorage->ClearPrerollErrors(); }
 

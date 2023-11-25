@@ -7,6 +7,7 @@ void *RSDK::RSDKFunctionTable[FunctionTable_Count];
 
 #if RETRO_REV02
 void *RSDK::APIFunctionTable[APITable_Count];
+void *RSDK::HEBridgeFunctionTable[HEBridgeTable_Count];
 
 RSDK::SKU::SKUInfo RSDK::SKU::curSKU;
 RSDK::SKU::UnknownInfo RSDK::SKU::unknownInfo;
@@ -22,6 +23,7 @@ void NullFunc() {}
 #define ADD_RSDK_FUNCTION(id, func) RSDKFunctionTable[id] = (void *)func;
 #if RETRO_REV02
 #define ADD_API_FUNCTION(id, func) APIFunctionTable[id] = (void *)func;
+#define ADD_HE_FUNCTION(id, func)  HEBridgeFunctionTable[id] = (void *)func;
 #else
 #define ADD_API_FUNCTION(name, func) SetAPIFunction(name, (void *)func);
 
@@ -242,6 +244,14 @@ void RSDK::SetupFunctionTables()
 #endif
 
     // ============================
+    // Hedgehog Engine Bridge Function Table
+    // ============================
+    ADD_HE_FUNCTION(HEBridgeTable_Unknown0, NULL);
+    ADD_HE_FUNCTION(HEBridgeTable_LoadUserFile, TryLoadUserFile);
+    ADD_HE_FUNCTION(HEBridgeTable_Unknown2, NULL);
+    ADD_HE_FUNCTION(HEBridgeTable_SaveUserFile, TrySaveUserFileHE);
+
+    // ============================
     // RSDK Function Table
     // ============================
 
@@ -460,9 +470,6 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_GetSfx, GetSfx);
     ADD_RSDK_FUNCTION(FunctionTable_PlaySfx, PlaySfx);
     ADD_RSDK_FUNCTION(FunctionTable_StopSfx, StopSfx);
-#if RETRO_REV0U
-    ADD_RSDK_FUNCTION(FunctionTable_StopAllSfx, StopAllSfx);
-#endif
     ADD_RSDK_FUNCTION(FunctionTable_PlayMusic, PlayStream);
     ADD_RSDK_FUNCTION(FunctionTable_SetChannelAttributes, SetChannelAttributes);
     ADD_RSDK_FUNCTION(FunctionTable_StopChannel, StopChannel);
@@ -529,8 +536,9 @@ void RSDK::SetupFunctionTables()
 
     // v5U Extras
 #if RETRO_REV0U
-    ADD_RSDK_FUNCTION(FunctionTable_NotifyCallback, NULL);
+    ADD_RSDK_FUNCTION(FunctionTable_NotifyCallback, NotifyCallback);
     ADD_RSDK_FUNCTION(FunctionTable_SetGameFinished, SetGameFinished);
+    ADD_RSDK_FUNCTION(FunctionTable_StopAllSfx, StopAllSfx);
 #endif
 
 #if RETRO_USE_MOD_LOADER

@@ -200,7 +200,7 @@ enum GameRegions {
 // ============================
 // USER CORE BACKENDS
 // ============================
-#define RETRO_USERCORE_ID (0)
+#define RETRO_USERCORE_ID (1)
 
 #define RETRO_USERCORE_DUMMY (!(RETRO_USERCORE_ID & 0x80)) // bit 7 disables the dummy core stuff if you ever need that for some odd reason
 #define RETRO_USERCORE_STEAM (RETRO_USERCORE_ID == 1)
@@ -688,6 +688,7 @@ inline void SetEngineState(uint8 state)
 
 #if RETRO_REV0U
 inline void SetGameFinished() { sceneInfo.state = ENGINESTATE_GAME_FINISHED; }
+void NotifyCallback(int32 callback, int32 param1, int32 param2, int32 param3);
 #endif
 
 extern int32 *globalVarsPtr;

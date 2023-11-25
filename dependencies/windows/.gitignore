@@ -1,3 +1,6 @@
 *
 !.gitignore
 !README.md
+!detours.lib
+!steam_api64.lib
+!syelog.lib

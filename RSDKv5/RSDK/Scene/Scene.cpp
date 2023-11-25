@@ -67,10 +67,6 @@ void RSDK::LoadSceneFolder()
     if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0 && !forceHardReset) {
         // Reload
         DefragmentAndGarbageCollectStorage(DATASET_STG);
-        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
-        PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
-                 sceneInfo.listData[sceneInfo.listPos].filter);
-
 #if RETRO_USE_MOD_LOADER
         // reload object hooks
         for (int32 h = 0; h < (int32)objectHookList.size(); ++h) {
@@ -145,8 +141,8 @@ void RSDK::LoadSceneFolder()
 
 #if RETRO_REV02
     forceHardReset   = false;
-    sceneInfo.filter = sceneEntry->filter;
-    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneEntry->filter);
+    sceneInfo.filter = 0xFF;
+    PrintLog(PRINT_NORMAL, "Loading Scene \"%s - %s\" with filter %d", list->name, sceneEntry->name, sceneInfo.filter);
 #endif
 
 #if !RETRO_REV02

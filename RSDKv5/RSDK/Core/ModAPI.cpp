@@ -513,7 +513,7 @@ void RSDK::LoadMods(bool newOnly, bool32 getVersion)
 
     using namespace std;
     char modBuf[0x100];
-    sprintf_s(modBuf, sizeof(modBuf), "%smods", SKU::userFileDir);
+    sprintf_s(modBuf, sizeof(modBuf), "%smods_decomp", SKU::userFileDir);
     fs::path modPath(modBuf);
 
     if (fs::exists(modPath) && fs::is_directory(modPath)) {

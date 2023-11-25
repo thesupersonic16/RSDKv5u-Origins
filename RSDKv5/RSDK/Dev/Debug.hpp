@@ -78,10 +78,18 @@ struct ViewableVariable {
     int32 max;
 };
 
+// Doesn't appear to match
 typedef enum {
-    VIEWVAR_INVALID,
-    VIEWVAR_BOOL,
     VIEWVAR_UINT8,
+    VIEWVAR_UNKNOWN1,
+    VIEWVAR_UNKNOWN2,
+    VIEWVAR_UNKNOWN3,
+    VIEWVAR_UNKNOWN4,
+    VIEWVAR_UNKNOWN5,
+    VIEWVAR_UNKNOWN6,
+    VIEWVAR_BOOL,
+
+    VIEWVAR_INVALID,
     VIEWVAR_UINT16,
     VIEWVAR_UINT32,
     VIEWVAR_INT8,

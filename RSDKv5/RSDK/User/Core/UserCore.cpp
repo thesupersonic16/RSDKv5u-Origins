@@ -1,4 +1,5 @@
 #include "RSDK/Core/RetroEngine.hpp"
+#include "steam_api.h"
 
 #include "iniparser/iniparser.h"
 
@@ -34,6 +35,8 @@ namespace SKU
 } // namespace RSDK
 
 using namespace RSDK;
+
+const char *defaultDataPack = "..\\..\\..\\..\\image\\x64\\raw\\retro\\Sonic3ku.rsdk";
 
 #if RETRO_REV02
 SKU::UserCore *RSDK::SKU::userCore = NULL;
@@ -310,7 +313,7 @@ void RSDK::LoadSettingsINI()
 #endif
 
         engine.devMenu = true;
-        if (LoadDataPack(iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"), 0, useBuffer))
+        if (LoadDataPack(iniparser_getstring(ini, "Game:dataFile", defaultDataPack), 0, useBuffer))
             engine.devMenu = iniparser_getboolean(ini, "Game:devMenu", false);
 
 #if !RETRO_USE_ORIGINAL_CODE
@@ -554,7 +557,7 @@ void RSDK::LoadSettingsINI()
         }
 
         SaveSettingsINI(true);
-        engine.devMenu = LoadDataPack("Data.rsdk", 0, useBuffer);
+        engine.devMenu = LoadDataPack(defaultDataPack, 0, useBuffer);
     }
 }
 
@@ -587,7 +590,7 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
         WriteText(file, "[Game]\n");
         if (ini) {
             if (strcmp(iniparser_getstring(ini, "Game:dataFile", ";unknown;"), ";unknown;") != 0 || (!RETRO_USE_ORIGINAL_CODE && RETRO_REV0U)) {
-                WriteText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", "Data.rsdk"));
+                WriteText(file, "dataFile=%s\n", iniparser_getstring(ini, "Game:dataFile", defaultDataPack));
             }
 
             if (strcmp(iniparser_getstring(ini, "Game:devMenu", ";unknown;"), ";unknown;") != 0 || (!RETRO_USE_ORIGINAL_CODE && RETRO_REV0U))

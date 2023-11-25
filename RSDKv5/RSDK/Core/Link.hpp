@@ -267,9 +267,6 @@ enum FunctionTableIDs {
     FunctionTable_GetSfx,
     FunctionTable_PlaySfx,
     FunctionTable_StopSfx,
-#if RETRO_REV0U
-    FunctionTable_StopAllSfx,
-#endif
     FunctionTable_PlayMusic,
     FunctionTable_SetChannelAttributes,
     FunctionTable_StopChannel,
@@ -322,13 +319,23 @@ enum FunctionTableIDs {
 #if RETRO_REV0U
     FunctionTable_NotifyCallback,
     FunctionTable_SetGameFinished,
+    FunctionTable_StopAllSfx,
 #endif
     FunctionTable_Count,
+};
+
+enum HEBridgeFunctionTableIDs {
+    HEBridgeTable_Unknown0,
+    HEBridgeTable_LoadUserFile,
+    HEBridgeTable_Unknown2,
+    HEBridgeTable_SaveUserFile,
+    HEBridgeTable_Count,
 };
 
 extern void *RSDKFunctionTable[FunctionTable_Count];
 #if RETRO_REV02
 extern void *APIFunctionTable[APITable_Count];
+extern void *HEBridgeFunctionTable[HEBridgeTable_Count];
 #else
 struct APITableEntry {
     void *ptr;
