@@ -367,7 +367,8 @@ void RSDK::ProcessEngine()
 
 #if RETRO_REV02
 #if !RETRO_USE_ORIGINAL_CODE
-                AddViewableVariable("Anniversary", ((char *)globalVarsPtr + 0x4C3510), VIEWVAR_BOOL, false, true);
+                // S3K event
+                OnStageLoad();
                 AddViewableVariable("Show Hitboxes", &showHitboxes, VIEWVAR_BOOL, false, true);
                 AddViewableVariable("Show Palettes", &engine.showPaletteOverlay, VIEWVAR_BOOL, false, true);
                 AddViewableVariable("Show Obj Range", &engine.showUpdateRanges, VIEWVAR_UINT8, 0, 2);

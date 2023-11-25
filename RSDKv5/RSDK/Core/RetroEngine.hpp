@@ -728,5 +728,6 @@ void SendQuitMsg();
 } // namespace RSDK
 
 #include "Link.hpp"
+#include "S3K.hpp"
 
 #endif //! RETROENGINE_H
