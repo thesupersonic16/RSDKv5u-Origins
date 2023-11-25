@@ -121,6 +121,11 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 #if RETRO_REV02
             SKU::userCore->FrameInit();
 
+            // Sonic 3K DLC check
+            // Because they don't like using the one from the engine?
+            *((char *)globalVarsPtr + 0x4C350C) = SKU::userCore->CheckDLC(0);
+
+
             if (SKU::userCore->CheckEnginePause())
                 continue;
 
@@ -362,6 +367,7 @@ void RSDK::ProcessEngine()
 
 #if RETRO_REV02
 #if !RETRO_USE_ORIGINAL_CODE
+                AddViewableVariable("Anniversary", ((char *)globalVarsPtr + 0x4C3510), VIEWVAR_BOOL, false, true);
                 AddViewableVariable("Show Hitboxes", &showHitboxes, VIEWVAR_BOOL, false, true);
                 AddViewableVariable("Show Palettes", &engine.showPaletteOverlay, VIEWVAR_BOOL, false, true);
                 AddViewableVariable("Show Obj Range", &engine.showUpdateRanges, VIEWVAR_UINT8, 0, 2);

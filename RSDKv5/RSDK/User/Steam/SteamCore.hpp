@@ -13,6 +13,7 @@ struct SteamCore : UserCore {
     void ExitGame();
     bool32 IsOverlayEnabled(uint32 overlay);
     bool32 ShowExtensionOverlay(uint8 overlay);
+    bool32 CheckDLC(uint8 id);
 
     bool32 initialized = false;
 };
