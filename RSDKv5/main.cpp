@@ -2,6 +2,7 @@
 #include "main.hpp"
 #include "HiteModLoader.h"
 #include "Helpers.h"
+#include "SigScan.h"
 
 #if RETRO_STANDALONE
 #define LinkGameLogic RSDK::LinkGameLogic
@@ -12,8 +13,7 @@
 
 HOOK(bool, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11CreateDevice"))
 {
-    //MessageBoxA(NULL, "", "", NULL);
-    RSDK::linkGameLogic = (RSDK::LogicLinkHandle)0x1400AD750;
+    RSDK::linkGameLogic = (RSDK::LogicLinkHandle)SigLinkGameLogic();
 
     // Force the console for now
     auto argc = 1;

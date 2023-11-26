@@ -106,6 +106,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
     }
 
     RenderDevice::InitFPSCap();
+    OnEngineInit();
 
     while (RenderDevice::isRunning) {
         RenderDevice::ProcessEvents();
@@ -121,10 +122,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 #if RETRO_REV02
             SKU::userCore->FrameInit();
 
-            // Sonic 3K DLC check
-            // Because they don't like using the one from the engine?
-            *((char *)globalVarsPtr + 0x4C350C) = SKU::userCore->CheckDLC(0);
-
+            OnFrameInit();
 
             if (SKU::userCore->CheckEnginePause())
                 continue;

@@ -46,8 +46,9 @@ namespace RSDK
         bool32 isAnniversary;
     };
 
+    void OnEngineInit();
+    void OnFrameInit();
     void OnStageLoad();
-    void OnProcessEngine();
 
 } // namespace RSDK
 #endif // !ifdef S3K_H
