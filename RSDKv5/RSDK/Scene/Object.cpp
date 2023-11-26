@@ -1179,7 +1179,7 @@ bool32 RSDK::GetActiveEntities(uint16 group, Entity **entity)
 }
 bool32 RSDK::GetAllEntities(uint16 classID, Entity **entity)
 {
-    if (classID >= OBJECT_COUNT)
+    if (classID >= 0x100)
         return false;
 
     if (!entity)
