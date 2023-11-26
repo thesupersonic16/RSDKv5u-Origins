@@ -11,7 +11,7 @@
 #define LinkGameLogic LinkGameLogicDLL
 #endif
 
-HOOK(bool, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11CreateDevice"))
+HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11CreateDevice"))
 {
     RSDK::linkGameLogic = (RSDK::LogicLinkHandle)SigLinkGameLogic();
 
@@ -25,8 +25,12 @@ HOOK(bool, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Create
 
     RSDK::ReleaseCoreAPI();
 
-    return false;
+    return E_FAIL;
 }
 
-extern "C" __declspec(dllexport) void Init(ModInfo * modInfo)
-{ INSTALL_HOOK(D3D11CreateDevice) }
+extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
+{
+    INSTALL_HOOK(D3D11CreateDevice);
+    // Nuke message box
+    WRITE_MEMORY(SigNukeSystemReq(), 0xEB);
+}
