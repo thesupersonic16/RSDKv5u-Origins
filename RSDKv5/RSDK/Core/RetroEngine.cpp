@@ -15,6 +15,10 @@ Link::Handle gameLogicHandle = NULL;
 #include <unistd.h>
 #endif
 
+#if RETRO_PLATFORM == RETRO_WIN
+bool32 consoleAllocated = NULL;
+#endif
+
 int32 *RSDK::globalVarsPtr = NULL;
 #if RETRO_REV0U
 void (*RSDK::globalVarsInitCB)(void *globals) = NULL;
@@ -326,6 +330,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 
     // Shutdown
 
+    OnEngineShutdown();
     ReleaseInputDevices();
     AudioDevice::Release();
     RenderDevice::Release(false);
@@ -1179,6 +1184,7 @@ void RSDK::LoadGameConfig()
 #if RETRO_REV0U
         if (globalVarsInitCB)
             globalVarsInitCB(globalVarsPtr);
+        OnGlobalsLoaded(globalVarsPtr);
 #endif
 
         sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart + startScene;
@@ -1490,7 +1496,7 @@ void RSDK::ReleaseCoreAPI()
 void RSDK::InitConsole()
 {
 #if RETRO_PLATFORM == RETRO_WIN
-    AllocConsole();
+    consoleAllocated = AllocConsole();
     AttachConsole(GetCurrentProcessId());
 
     freopen("CON", "w", stdout);
@@ -1503,7 +1509,8 @@ void RSDK::InitConsole()
 void RSDK::ReleaseConsole()
 {
 #if RETRO_PLATFORM == RETRO_WIN
-    FreeConsole();
+    if (consoleAllocated)
+        FreeConsole();
 #endif
 }
 

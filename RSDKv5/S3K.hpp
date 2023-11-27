@@ -81,7 +81,7 @@ namespace RSDK
         GameTypes gameSpriteStyle;
         GameTypes ostStyle;
         uint8 gap4C340C[0xC8];
-        int32 disableLives;
+        bool32 disableLives;
         int32 unknown4C34D8;
         int32 unknown4C34DC;
         int32 coinCount;
@@ -93,18 +93,32 @@ namespace RSDK
         int32 unknown4C351C;
         int32 unknown4C3520;
         int32 unknown4C3524;
-        int32 useCoins;
+        bool32 useCoins;
         uint8 gap4C352C[0x60];
         bool32 waitSSRetry;
+    };
+
+    struct OriginsSaveData {
+        uint32 version;
+        bool32 disableLives;
+        bool32 usePathTracer;
+        bool32 useCoins;
+        int32  coinCount;
+        bool32 playMode;
+        int32  lastSaveSlot;
+        uint32 lastCharacterID;
     };
 
     void OnEngineInit();
     void OnFrameInit();
     void OnStageLoad();
+    void OnEngineShutdown();
+    void OnGlobalsLoaded(int32 *globals);
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3);
     
     bool32 VideoSkipCB();
     void DrawSpecialStageRetryMessage();
+    void LoadDefaultOriginsSaveData(OriginsSaveData *savedata);
 
     } // namespace RSDK
 #endif // !ifdef S3K_H

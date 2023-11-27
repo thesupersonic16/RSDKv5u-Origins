@@ -41,8 +41,8 @@ bool32 SteamUserStorage::TryLoadUserFile(const char *filename, void *buffer, uin
 
     int bytesRead = SteamRemoteStorage()->FileRead(filename, buffer, size);
 
-    // Check if all bytes are read
-    success = bytesRead >= size;
+    // Check if any bytes are read
+    success = bytesRead != 0;
     if (callback)
         callback(success ? STATUS_OK : STATUS_ERROR);
 

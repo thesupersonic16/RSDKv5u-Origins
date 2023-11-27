@@ -7,7 +7,6 @@ void *RSDK::RSDKFunctionTable[FunctionTable_Count];
 
 #if RETRO_REV02
 void *RSDK::APIFunctionTable[APITable_Count];
-void *RSDK::HEBridgeFunctionTable[HEBridgeTable_Count];
 
 RSDK::SKU::SKUInfo RSDK::SKU::curSKU;
 RSDK::SKU::UnknownInfo RSDK::SKU::unknownInfo;
@@ -16,9 +15,16 @@ RSDK::APITableEntry RSDK::APIFunctionTable[APITABLE_COUNT];
 int32 RSDK::APIFunctionTableCount;
 #endif
 
+#if RETRO_REV0U
+void *RSDK::HEBridgeFunctionTable[HEBridgeTable_Count];
+#endif
+
 RSDK::GameVersionInfo RSDK::gameVerInfo;
 
 void NullFunc() {}
+#if RETRO_REV0U
+int32 Func200() { return 200; }
+#endif // RETRO_REV0U
 
 #define ADD_RSDK_FUNCTION(id, func) RSDKFunctionTable[id] = (void *)func;
 #if RETRO_REV02
@@ -83,6 +89,9 @@ void RSDK::SetupFunctionTables()
     memset(RSDKFunctionTable, 0, sizeof(RSDKFunctionTable));
 #if RETRO_REV02
     memset(APIFunctionTable, 0, sizeof(APIFunctionTable));
+#endif
+#if RETRO_REV0U
+    memset(HEBridgeFunctionTable, 0, sizeof(HEBridgeFunctionTable));
 #endif
 
 #if RETRO_REV02
@@ -243,14 +252,17 @@ void RSDK::SetupFunctionTables()
     ADD_API_FUNCTION("SetInputLEDColor", SetInputLEDColor);
 #endif
 
+#if RETRO_REV0U
     // ============================
     // Hedgehog Engine Bridge Function Table
     // ============================
-    ADD_HE_FUNCTION(HEBridgeTable_Unknown0, NULL);
-    ADD_HE_FUNCTION(HEBridgeTable_LoadUserFile, TryLoadUserFile);
-    ADD_HE_FUNCTION(HEBridgeTable_Unknown2, NULL);
-    ADD_HE_FUNCTION(HEBridgeTable_SaveUserFile, TrySaveUserFileHE);
-
+    ADD_HE_FUNCTION(HEBridgeTable_LoadUserFile, LoadUserFile);
+    ADD_HE_FUNCTION(HEBridgeTable_TryLoadUserFile, TryLoadUserFile);
+    ADD_HE_FUNCTION(HEBridgeTable_SaveUserFile, SaveUserFile);
+    ADD_HE_FUNCTION(HEBridgeTable_TrySaveUserFile, TrySaveUserFileHE);
+    ADD_HE_FUNCTION(HEBridgeTable_StatusOK, Func200);
+    ADD_HE_FUNCTION(HEBridgeTable_StatusOK2, Func200);
+#endif
     // ============================
     // RSDK Function Table
     // ============================

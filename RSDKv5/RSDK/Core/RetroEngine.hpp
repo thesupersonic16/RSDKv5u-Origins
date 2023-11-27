@@ -688,7 +688,6 @@ inline void SetEngineState(uint8 state)
 
 #if RETRO_REV0U
 inline void SetGameFinished() { sceneInfo.state = ENGINESTATE_GAME_FINISHED; }
-void NotifyCallback(int32 callback, int32 param1, int32 param2, int32 param3);
 #endif
 
 extern int32 *globalVarsPtr;

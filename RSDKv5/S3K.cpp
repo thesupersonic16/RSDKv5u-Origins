@@ -6,31 +6,61 @@
 namespace RSDK
 {
     // Variables
+    OriginsSaveData originsSaveData;
     GlobalS3KVariables *globalVars = NULL;
     bool *usePathTracer            = NULL;
+    bool usingLevelSelect          = false;
 
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
-        
-        // Due to an engine bug we will disable path tracer
-        *usePathTracer = false;
+        // Should really be in the callback but this function at the monent is not async
+        //SKU::TryDeleteUserFile("OriginsSaveData.bin", NULL);
+        if (!SKU::TryLoadUserFile("OriginsSaveData.bin", &originsSaveData, sizeof(OriginsSaveData), NULL))
+            LoadDefaultOriginsSaveData(&originsSaveData);
+        *usePathTracer = originsSaveData.usePathTracer;
+        OnGlobalsLoaded(globalVarsPtr);
+    }
+
+    void OnEngineShutdown()
+    {
+        if (globalVars) {
+            originsSaveData.disableLives  = globalVars->disableLives;
+            originsSaveData.usePathTracer = (bool32)*usePathTracer;
+            originsSaveData.useCoins      = globalVars->useCoins;
+            originsSaveData.coinCount     = globalVars->coinCount;
+            originsSaveData.playMode      = globalVars->playMode;
+        }
+        SKU::TrySaveUserFile("OriginsSaveData.bin", &originsSaveData, sizeof(OriginsSaveData), NULL, false);
+    }
+
+    void OnGlobalsLoaded(int32* globals)
+    { 
+        globalVars = (GlobalS3KVariables *)globalVarsPtr;
+
+        if (globalVars) {
+            globalVars->disableLives = originsSaveData.disableLives;
+            globalVars->useCoins     = originsSaveData.useCoins;
+            globalVars->coinCount    = originsSaveData.coinCount;
+            globalVars->playMode     = originsSaveData.playMode;
+        }
     }
 
     void OnFrameInit()
     {
-        // Check for PLus DLC
+        // Check for Plus DLC
         if (globalVars)
             globalVars->hasPlusDLC = SKU::userCore->CheckDLC(0);
     }
 
     void OnStageLoad()
     {
-        globalVars = (GlobalS3KVariables *)globalVarsPtr;
-        AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 4);
-        AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
-        AddViewableVariable("Use Coins", &globalVars->useCoins, VIEWVAR_BOOL, false, true);
-        AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
+        if (globalVars) {
+            AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 4);
+            AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
+            AddViewableVariable("Use Coins", &globalVars->useCoins, VIEWVAR_BOOL, false, true);
+            AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
+        }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
     }
 
@@ -40,11 +70,14 @@ namespace RSDK
             case NOTIFY_DEATH_EVENT:         PrintLog(PRINT_NORMAL, "NOTIFY: DeathEvent() -> %d", param1); break;
             case NOTIFY_TOUCH_SIGNPOST:      PrintLog(PRINT_NORMAL, "NOTIFY: TouchSignPost() -> %d", param1); break;
             case NOTIFY_HUD_ENABLE:          PrintLog(PRINT_NORMAL, "NOTIFY: HUDEnable() -> %d", param1); break;
-            case NOTIFY_ADD_COIN:
-                globalVars->coinCount += param1;
+            case NOTIFY_ADD_COIN: 
+                globalVars->coinCount = CLAMP(globalVars->coinCount + param1, 0, 999);
                 break;
             case NOTIFY_KILL_ENEMY:          PrintLog(PRINT_NORMAL, "NOTIFY: KillEnemy() -> %d", param1); break;
-            case NOTIFY_SAVESLOT_SELECT:     PrintLog(PRINT_NORMAL, "NOTIFY: SaveSlotSelect() -> %d", param1); break;
+            case NOTIFY_SAVESLOT_SELECT:
+                if (!usingLevelSelect)
+                    originsSaveData.lastSaveSlot = param1;
+                break;
             case NOTIFY_FUTURE_PAST:         PrintLog(PRINT_NORMAL, "NOTIFY: FuturePast() -> %d", param1); break;
             case NOTIFY_GOTO_FUTURE_PAST:    PrintLog(PRINT_NORMAL, "NOTIFY: GotoFuturePast() -> %d", param1); break;
             case NOTIFY_BOSS_END:            PrintLog(PRINT_NORMAL, "NOTIFY: BossEnd() -> %d", param1); break;
@@ -82,8 +115,11 @@ namespace RSDK
             case NOTIFY_SOUND_TRACK:         PrintLog(PRINT_NORMAL, "NOTIFY: SoundTrack() -> %d", param1); break;
             case NOTIFY_GOOD_ENDING:         PrintLog(PRINT_NORMAL, "NOTIFY: GoodEnding() -> %d", param1); break;
             case NOTIFY_BACK_TO_MAINMENU:    PrintLog(PRINT_NORMAL, "NOTIFY: BackToMainMenu() -> %d", param1); break;
-            case NOTIFY_LEVEL_SELECT_MENU:   PrintLog(PRINT_NORMAL, "NOTIFY: LevelSelectMenu() -> %d", param1); break;
-            case NOTIFY_PLAYER_SET:          PrintLog(PRINT_NORMAL, "NOTIFY: PlayerSet() -> %d", param1); break;
+            case NOTIFY_LEVEL_SELECT_MENU:   usingLevelSelect = param1; break;
+            case NOTIFY_PLAYER_SET: 
+                if (!usingLevelSelect)
+                    originsSaveData.lastCharacterID = param1;
+                break;
             case NOTIFY_EXTRAS_MODE:         PrintLog(PRINT_NORMAL, "NOTIFY: ExtrasMode() -> %d", param1); break;
             case NOTIFY_SPIN_DASH_TYPE:      PrintLog(PRINT_NORMAL, "NOTIFY: SpindashType() -> %d", param1); break;
             case NOTIFY_TIME_OVER:           PrintLog(PRINT_NORMAL, "NOTIFY: TimeOver() -> %d", param1); break;
@@ -121,6 +157,18 @@ namespace RSDK
         else if (controller->keyB.down) {
             CloseDevMenu();
         }
+    }
+
+    void LoadDefaultOriginsSaveData(OriginsSaveData* savedata)
+    {
+        savedata->version         = 0;
+        savedata->disableLives    = true;
+        savedata->usePathTracer   = false; // Due to an engine bug path tracer will be disabled by default
+        savedata->useCoins        = true;
+        savedata->coinCount       = 0;
+        savedata->playMode        = 1;  // 1: Anniversary
+        savedata->lastSaveSlot    = -1; // -1: No save
+        savedata->lastCharacterID = ID_SONIC | ID_TAILS;
     }
 
 } // namespace RSDK
