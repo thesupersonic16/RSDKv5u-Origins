@@ -536,7 +536,7 @@ void RSDK::SetupFunctionTables()
 
     // v5U Extras
 #if RETRO_REV0U
-    ADD_RSDK_FUNCTION(FunctionTable_NotifyCallback, NotifyCallback);
+    ADD_RSDK_FUNCTION(FunctionTable_NotifyCallback, OnCallbackNotify);
     ADD_RSDK_FUNCTION(FunctionTable_SetGameFinished, SetGameFinished);
     ADD_RSDK_FUNCTION(FunctionTable_StopAllSfx, StopAllSfx);
 #endif

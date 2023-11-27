@@ -30,6 +30,47 @@ namespace RSDK
         GAME_SK,
     };
 
+    enum NotifyCallbackIDs {
+        NOTIFY_DEATH_EVENT = 128,
+        NOTIFY_TOUCH_SIGNPOST,
+        NOTIFY_HUD_ENABLE,
+        NOTIFY_ADD_COIN,
+        NOTIFY_KILL_ENEMY,
+        NOTIFY_SAVESLOT_SELECT,
+        NOTIFY_FUTURE_PAST,
+        NOTIFY_GOTO_FUTURE_PAST,
+        NOTIFY_BOSS_END,
+        NOTIFY_SPECIAL_END,
+        NOTIFY_DEBUGPRINT,
+        NOTIFY_KILL_BOSS,
+        NOTIFY_TOUCH_EMERALD,
+        NOTIFY_STATS_ENEMY,
+        NOTIFY_STATS_CHARA_ACTION,
+        NOTIFY_STATS_RING,
+        NOTIFY_STATS_MOVIE,
+        NOTIFY_STATS_PARAM_1,
+        NOTIFY_STATS_PARAM_2,
+        NOTIFY_CHARACTER_SELECT,
+        NOTIFY_SPECIAL_RETRY,
+        NOTIFY_TOUCH_CHECKPOINT,
+        NOTIFY_ACT_FINISH,
+        NOTIFY_1P_VS_SELECT,
+        NOTIFY_CONTROLLER_SUPPORT,
+        NOTIFY_STAGE_RETRY,
+        NOTIFY_SOUND_TRACK,
+        NOTIFY_GOOD_ENDING,
+        NOTIFY_BACK_TO_MAINMENU,
+        NOTIFY_LEVEL_SELECT_MENU,
+        NOTIFY_PLAYER_SET,
+        NOTIFY_EXTRAS_MODE,
+        NOTIFY_SPIN_DASH_TYPE,
+        NOTIFY_TIME_OVER,
+        NOTIFY_TIMEATTACK_MODE,
+        NOTIFY_STATS_BREAK_OBJECT,
+        NOTIFY_STATS_SAVE_FUTURE,
+        NOTIFY_STATS_CHARA_ACTION2,
+    };
+
     struct GlobalS3KVariables {
         uint8 gameMode;
         CharacterIDs playerID;
@@ -40,15 +81,30 @@ namespace RSDK
         GameTypes gameSpriteStyle;
         GameTypes ostStyle;
         uint8 gap4C340C[0xC8];
-        int disableLives;
-        uint8 gap4C34DC[0x34];
+        int32 disableLives;
+        int32 unknown4C34D8;
+        int32 unknown4C34DC;
+        int32 coinCount;
+        uint8 gap4C34DC[0x28];
         bool32 hasPlusDLC;
-        bool32 isAnniversary;
+        bool32 playMode;
+        int32 unknown4C3514;
+        int32 unknown4C3518;
+        int32 unknown4C351C;
+        int32 unknown4C3520;
+        int32 unknown4C3524;
+        int32 useCoins;
+        uint8 gap4C352C[0x60];
+        bool32 waitSSRetry;
     };
 
     void OnEngineInit();
     void OnFrameInit();
     void OnStageLoad();
+    void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3);
+    
+    bool32 VideoSkipCB();
+    void DrawSpecialStageRetryMessage();
 
-} // namespace RSDK
+    } // namespace RSDK
 #endif // !ifdef S3K_H

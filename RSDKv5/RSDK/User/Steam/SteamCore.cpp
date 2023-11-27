@@ -49,7 +49,7 @@ bool32 SteamCore::CheckDLC(uint8 id)
 {
     switch (id) {
     case 0: return SteamApps()->BIsDlcInstalled(2343200);
-    default: false;
+    default: return false;
     }
 }
 

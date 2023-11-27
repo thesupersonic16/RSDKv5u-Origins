@@ -32,5 +32,5 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
 {
     INSTALL_HOOK(D3D11CreateDevice);
     // Nuke message box
-    WRITE_MEMORY(SigNukeSystemReq(), 0xEB);
+    WRITE_MEMORY(SigNukeSystemReq(), (char)0xEB);
 }
