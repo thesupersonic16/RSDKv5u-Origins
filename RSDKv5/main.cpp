@@ -11,14 +11,23 @@
 #define LinkGameLogic LinkGameLogicDLL
 #endif
 
+ModLoader *ModLoaderData;
+
+void GetRedirectedPath(const char *path, char *out) { ModLoaderData->GetRedirectedPath(path, out); }
+
 HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11CreateDevice"))
 {
+    // Workaround for selecting datapack for the modloader
+    auto MLEngine_LoadFile = (void(__fastcall *)(FileInfo *info, const char *filePath, int openMode))(SigEngine_LoadFile());
+    FileInfo info;
+    MLEngine_LoadFile(&info, "retro/Sonic3ku.rsdk", 0xFF);
+    
     RSDK::linkGameLogic = (RSDK::LogicLinkHandle)SigLinkGameLogic();
 
     // Force the console for now
     auto argc = 1;
     auto argv = new const char*[1]{ "console=true" };
-
+    
     RSDK::InitCoreAPI();
 
     int32 exitCode = RSDK::RunRetroEngine(argc, (char**)argv);
@@ -33,4 +42,6 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
     INSTALL_HOOK(D3D11CreateDevice);
     // Nuke message box
     WRITE_MEMORY(SigNukeSystemReq(), (char)0xEB);
+
+    ModLoaderData = modInfo->ModLoader;
 }

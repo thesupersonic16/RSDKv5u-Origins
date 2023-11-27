@@ -6,7 +6,7 @@
 namespace RSDK
 {
     // Variables
-    OriginsSaveData originsSaveData;
+    OriginsData originsData;
     GlobalS3KVariables *globalVars = NULL;
     bool *usePathTracer            = NULL;
     bool usingLevelSelect          = false;
@@ -15,23 +15,23 @@ namespace RSDK
     {
         usePathTracer = (bool *)SigusePathTracer();
         // Should really be in the callback but this function at the monent is not async
-        //SKU::TryDeleteUserFile("OriginsSaveData.bin", NULL);
-        if (!SKU::TryLoadUserFile("OriginsSaveData.bin", &originsSaveData, sizeof(OriginsSaveData), NULL))
-            LoadDefaultOriginsSaveData(&originsSaveData);
-        *usePathTracer = originsSaveData.usePathTracer;
+        //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
+        if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), NULL))
+            LoadDefaultOriginsData(&originsData);
+        *usePathTracer = originsData.usePathTracer;
         OnGlobalsLoaded(globalVarsPtr);
     }
 
     void OnEngineShutdown()
     {
         if (globalVars) {
-            originsSaveData.disableLives  = globalVars->disableLives;
-            originsSaveData.usePathTracer = (bool32)*usePathTracer;
-            originsSaveData.useCoins      = globalVars->useCoins;
-            originsSaveData.coinCount     = globalVars->coinCount;
-            originsSaveData.playMode      = globalVars->playMode;
+            originsData.disableLives  = globalVars->disableLives;
+            originsData.usePathTracer = (bool32)*usePathTracer;
+            originsData.useCoins      = globalVars->useCoins;
+            originsData.coinCount     = globalVars->coinCount;
+            originsData.playMode      = globalVars->playMode;
         }
-        SKU::TrySaveUserFile("OriginsSaveData.bin", &originsSaveData, sizeof(OriginsSaveData), NULL, false);
+        SKU::TrySaveUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), NULL, false);
     }
 
     void OnGlobalsLoaded(int32* globals)
@@ -39,10 +39,10 @@ namespace RSDK
         globalVars = (GlobalS3KVariables *)globalVarsPtr;
 
         if (globalVars) {
-            globalVars->disableLives = originsSaveData.disableLives;
-            globalVars->useCoins     = originsSaveData.useCoins;
-            globalVars->coinCount    = originsSaveData.coinCount;
-            globalVars->playMode     = originsSaveData.playMode;
+            globalVars->disableLives = originsData.disableLives;
+            globalVars->useCoins     = originsData.useCoins;
+            globalVars->coinCount    = originsData.coinCount;
+            globalVars->playMode     = originsData.playMode;
         }
     }
 
@@ -56,7 +56,7 @@ namespace RSDK
     void OnStageLoad()
     {
         if (globalVars) {
-            AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 4);
+            AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 8);
             AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Use Coins", &globalVars->useCoins, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
@@ -76,7 +76,7 @@ namespace RSDK
             case NOTIFY_KILL_ENEMY:          PrintLog(PRINT_NORMAL, "NOTIFY: KillEnemy() -> %d", param1); break;
             case NOTIFY_SAVESLOT_SELECT:
                 if (!usingLevelSelect)
-                    originsSaveData.lastSaveSlot = param1;
+                    originsData.lastSaveSlot = param1;
                 break;
             case NOTIFY_FUTURE_PAST:         PrintLog(PRINT_NORMAL, "NOTIFY: FuturePast() -> %d", param1); break;
             case NOTIFY_GOTO_FUTURE_PAST:    PrintLog(PRINT_NORMAL, "NOTIFY: GotoFuturePast() -> %d", param1); break;
@@ -89,11 +89,11 @@ namespace RSDK
             case NOTIFY_STATS_CHARA_ACTION:  PrintLog(PRINT_NORMAL, "NOTIFY: StatsCharaAction() -> %d, %d, %d", param1, param2, param3); break;
             case NOTIFY_STATS_RING:          PrintLog(PRINT_NORMAL, "NOTIFY: StatsRing() -> %d", param1); break;
             case NOTIFY_STATS_MOVIE:
-                PlayStream("Outro.ogg", 0, 0, 0, false);
-                LoadVideo("Outro.ogv", 0, VideoSkipCB);
                 sceneInfo.activeCategory = 0;
                 sceneInfo.listPos        = 0;
                 sceneInfo.state          = ENGINESTATE_LOAD;
+                PlayStream("Outro.ogg", 0, 0, 0, false);
+                LoadVideo("Outro.ogv", 0, VideoSkipCB);
                 break;
             case NOTIFY_STATS_PARAM_1:       PrintLog(PRINT_NORMAL, "NOTIFY: StatsParam1() -> %d, %d, %d", param1, param2, param3); break;
             case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_NORMAL, "NOTIFY: StatsParam2() -> %d", param1); break;
@@ -118,7 +118,7 @@ namespace RSDK
             case NOTIFY_LEVEL_SELECT_MENU:   usingLevelSelect = param1; break;
             case NOTIFY_PLAYER_SET: 
                 if (!usingLevelSelect)
-                    originsSaveData.lastCharacterID = param1;
+                    originsData.lastCharacterID = param1;
                 break;
             case NOTIFY_EXTRAS_MODE:         PrintLog(PRINT_NORMAL, "NOTIFY: ExtrasMode() -> %d", param1); break;
             case NOTIFY_SPIN_DASH_TYPE:      PrintLog(PRINT_NORMAL, "NOTIFY: SpindashType() -> %d", param1); break;
@@ -159,13 +159,13 @@ namespace RSDK
         }
     }
 
-    void LoadDefaultOriginsSaveData(OriginsSaveData* savedata)
+    void LoadDefaultOriginsData(OriginsData* savedata)
     {
         savedata->version         = 0;
         savedata->disableLives    = true;
         savedata->usePathTracer   = false; // Due to an engine bug path tracer will be disabled by default
         savedata->useCoins        = true;
-        savedata->coinCount       = 0;
+        savedata->coinCount       = 100;
         savedata->playMode        = 1;  // 1: Anniversary
         savedata->lastSaveSlot    = -1; // -1: No save
         savedata->lastCharacterID = ID_SONIC | ID_TAILS;

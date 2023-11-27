@@ -98,7 +98,7 @@ namespace RSDK
         bool32 waitSSRetry;
     };
 
-    struct OriginsSaveData {
+    struct OriginsData {
         uint32 version;
         bool32 disableLives;
         bool32 usePathTracer;
@@ -118,7 +118,7 @@ namespace RSDK
     
     bool32 VideoSkipCB();
     void DrawSpecialStageRetryMessage();
-    void LoadDefaultOriginsSaveData(OriginsSaveData *savedata);
+    void LoadDefaultOriginsData(OriginsData *savedata);
 
     } // namespace RSDK
 #endif // !ifdef S3K_H

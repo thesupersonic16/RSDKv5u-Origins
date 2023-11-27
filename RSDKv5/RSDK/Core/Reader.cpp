@@ -2,6 +2,10 @@
 
 using namespace RSDK;
 
+// HiteModLoader
+// Links to main.cpp
+void GetRedirectedPath(const char *path, char *out);
+
 RSDKFileInfo RSDK::dataFileList[DATAFILE_COUNT];
 RSDKContainer RSDK::dataPacks[DATAPACK_COUNT];
 
@@ -237,8 +241,13 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     if (info->file)
         return false;
 
-    char fullFilePath[0x100];
-    strcpy(fullFilePath, filename);
+    char fullFilePath[0x100]{};
+    // HiteModLoader
+    GetRedirectedPath(filename, fullFilePath);
+    if (fullFilePath[0])
+        info->externalFile = true;
+    else
+        strcpy(fullFilePath, filename);
 
 #if RETRO_USE_MOD_LOADER
     char pathLower[0x100];
