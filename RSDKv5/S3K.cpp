@@ -6,6 +6,7 @@
 namespace RSDK
 {
     // Variables
+    SFXChangeInfo sfxChanges[0x40] {};
     OriginsData originsData;
     GlobalS3KVariables *globalVars = NULL;
     bool *usePathTracer            = NULL;
@@ -14,6 +15,10 @@ namespace RSDK
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
+
+        // Add SFX loop point replacements
+        AddSfxLoopReplacement("Stage/Airship.wav", 179497, 0);
+
         // Should really be in the callback but this function at the monent is not async
         //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
         if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), NULL))
@@ -62,6 +67,18 @@ namespace RSDK
             AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
+    }
+
+    void OnSfxPlay(ChannelInfo *info)
+    { 
+        for (int i = 0; i < sizeof(sfxChanges); ++i) {
+            SFXChangeInfo *changeInfo = &sfxChanges[i];
+            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, sfxChanges->name) && info->loop == changeInfo->oldLoopPoint)
+            {
+                info->loop = changeInfo->newLoopPoint;
+                return;
+            }
+        }
     }
 
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3)
@@ -129,6 +146,24 @@ namespace RSDK
             case NOTIFY_STATS_CHARA_ACTION2: PrintLog(PRINT_NORMAL, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3); break;
             default: PrintLog(PRINT_NORMAL, "NOTIFY: %d -> %d, %d, %d", callback, param1, param2, param3); break;
         }
+    }
+
+    void AddSfxLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint)
+    {
+        // Find empty slot
+        int slot = 0;
+        for (int i = 0; i < sizeof(sfxChanges); ++i) {
+            if (!sfxChanges[i].name[0]) {
+                slot = i;
+                break;
+            }
+        }
+
+        SFXChangeInfo *info = &sfxChanges[slot];
+
+        GEN_HASH_MD5(filename, info->name);
+        info->oldLoopPoint = oldLoopPoint;
+        info->newLoopPoint = newLoopPoint;
     }
 
     bool32 VideoSkipCB()

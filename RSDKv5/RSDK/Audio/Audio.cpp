@@ -501,6 +501,8 @@ int32 RSDK::PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
     channels[slot].priority  = priority;
     channels[slot].playIndex = sfxList[sfx].playCount++;
 
+    OnSfxPlay(&channels[slot]);
+
     UnlockAudioDevice();
 
     return slot;

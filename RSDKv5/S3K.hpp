@@ -109,13 +109,20 @@ namespace RSDK
         uint32 lastCharacterID;
     };
 
+    struct SFXChangeInfo {
+        RETRO_HASH_MD5(name);
+        uint32 oldLoopPoint;
+        uint32 newLoopPoint;
+    };
+
     void OnEngineInit();
     void OnFrameInit();
     void OnStageLoad();
     void OnEngineShutdown();
     void OnGlobalsLoaded(int32 *globals);
+    void OnSfxPlay(ChannelInfo* info);
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3);
-    
+    void AddSfxLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint);
     bool32 VideoSkipCB();
     void DrawSpecialStageRetryMessage();
     void LoadDefaultOriginsData(OriginsData *savedata);
