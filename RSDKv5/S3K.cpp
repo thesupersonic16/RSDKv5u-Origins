@@ -3,24 +3,25 @@
 #include "Helpers.h"
 #include "SigScan.h"
 
+// Links to Audio.cpp
+extern char streamFilePath[0x40];
+
 namespace RSDK
 {
     // Variables
-    SFXChangeInfo sfxChanges[0x40] {};
+    LoopPointChangeInfo loopChanges[0x100] {};
     OriginsData originsData;
     GlobalS3KVariables *globalVars = NULL;
     bool *usePathTracer            = NULL;
     bool usingLevelSelect          = false;
+    char streamFileName[0x40];
+    bool isStreamFast = false;
 
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
 
-        // Add SFX loop point replacements
-        AddSfxLoopReplacement("Stage/Airship.wav", 179497, 0);
-        AddSfxLoopReplacement("Stage/Airflow.wav", 82292, 0);
-        AddSfxLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0);
-
+        RegisterLoopPoints();
         // Should really be in the callback but this function at the monent is not async
         //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
         if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), NULL))
@@ -73,14 +74,56 @@ namespace RSDK
 
     void OnSfxPlay(ChannelInfo *info)
     { 
-        for (int i = 0; i < sizeof(sfxChanges) / sizeof(SFXChangeInfo); ++i) {
-            SFXChangeInfo *changeInfo = &sfxChanges[i];
-            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, changeInfo->name) && info->loop == changeInfo->oldLoopPoint)
+        for (int i = 0; i < sizeof(loopChanges) / sizeof(LoopPointChangeInfo); ++i) {
+            LoopPointChangeInfo *changeInfo = &loopChanges[i];
+            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, changeInfo->hash) && info->loop == changeInfo->oldLoopPoint)
             {
                 info->loop = changeInfo->newLoopPoint;
                 return;
             }
         }
+    }
+
+    bool32 OnStreamPlay(char **filename, uint32* slot, uint32* startPos, uint32* loopPoint, int32* speed)
+    {
+        PrintLog(PRINT_NORMAL, "OnStreamPlay(%s, %d, %d, %d)", *filename, *slot, *startPos, *loopPoint);
+        
+        // Replace loop point
+        RETRO_HASH_MD5(hash);
+        GEN_HASH_MD5(*filename, hash);
+        for (int i = 0; i < sizeof(loopChanges) / sizeof(LoopPointChangeInfo); ++i) {
+            LoopPointChangeInfo *changeInfo = &loopChanges[i];
+            if (HASH_MATCH_MD5(hash, changeInfo->hash) && *loopPoint == changeInfo->oldLoopPoint) {
+                *loopPoint = changeInfo->newLoopPoint;
+                break;
+            }
+        }
+
+        // Handle speed
+        // The code built in S3K for handling the speed is faulty
+        std::string path = std::string("Data/Music/") + *filename;
+        std::string name = *filename;
+        bool isFast      = name.find("/F/") != std::string::npos;
+
+        if (isFast)
+        {
+            path.replace(path.find("/F/"), 3, "/");
+            name.replace(name.find("/F/"), 3, "/");
+        }
+
+        ChannelInfo *channel = &channels[*slot];
+        if (!strcmp(streamFilePath, path.c_str()))
+        {
+            strcpy_s(streamFileName, name.c_str());
+            *filename = streamFileName;
+            channel->speed    = (int32)((isFast ? 1.2 : 1.0) * TO_FIXED(1));
+            PrintLog(PRINT_NORMAL, "Speed is now %f", isFast ? 1.2 : 1.0);
+            bool speedChanged = isStreamFast != isFast;
+            isStreamFast      = isFast;
+            return !(channel->state == CHANNEL_STREAM && speedChanged);
+        }
+        isFast = false;
+        return true;
     }
 
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3)
@@ -150,22 +193,75 @@ namespace RSDK
         }
     }
 
-    void AddSfxLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint)
+    void AddLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint)
     {
         // Find empty slot
         int slot = 0;
-        for (int i = 0; i < sizeof(sfxChanges); ++i) {
-            if (!sfxChanges[i].name[0]) {
+        for (int i = 0; i < sizeof(loopChanges); ++i) {
+            if (!loopChanges[i].hash[0]) {
                 slot = i;
                 break;
             }
         }
 
-        SFXChangeInfo *info = &sfxChanges[slot];
+        LoopPointChangeInfo *info = &loopChanges[slot];
 
-        GEN_HASH_MD5(filename, info->name);
+        GEN_HASH_MD5(filename, info->hash);
         info->oldLoopPoint = oldLoopPoint;
         info->newLoopPoint = newLoopPoint;
+    }
+
+    void RegisterLoopPoints()
+    {
+        // SoundFX
+        AddLoopReplacement("Stage/Airship.wav", 179497, 0);
+        AddLoopReplacement("Stage/Airflow.wav", 82292, 0);
+        AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0);
+
+        // Music
+        AddLoopReplacement("3K/AngelIsland1.ogg"  , 1, 161209);
+        AddLoopReplacement("3K/AngelIsland2.ogg"  , 1, 95776);
+        AddLoopReplacement("3K/AzureLake.ogg"     , 96970, 150175);
+        AddLoopReplacement("3K/BalloonPark.ogg"   , 39500, 127295);
+        AddLoopReplacement("3K/Boss.ogg"          , 141019, 132660);
+        AddLoopReplacement("3K/CarnivalNight1.ogg", 1, 82540);
+        AddLoopReplacement("3K/CarnivalNight2.ogg", 1, 82580);
+        AddLoopReplacement("3K/ChromeGadget.ogg"  , 1, 113331);
+        AddLoopReplacement("3K/Competition.ogg"   , 1, 103687);
+        AddLoopReplacement("3K/DeathEgg1.ogg"     , 1, 181948);
+        AddLoopReplacement("3K/DeathEgg2.ogg"     , 1, 158988);
+        AddLoopReplacement("3K/DesertPalace.ogg"  , 1, 81737);
+        AddLoopReplacement("3K/Doomsday.ogg"      , 626645, 661556);
+        AddLoopReplacement("3K/EndlessMine.ogg"   , 76852, 158392);
+        AddLoopReplacement("3K/FlyingBattery1.ogg", 17688, 265102);
+        AddLoopReplacement("3K/FlyingBattery2.ogg", 70605, 353223);
+        AddLoopReplacement("3K/GachaBonus.ogg"    , 160668, 239783);
+        AddLoopReplacement("3K/Hydrocity1.ogg"    , 1, 164780);
+        AddLoopReplacement("3K/Hydrocity2.ogg"    , 1, 92643);
+        AddLoopReplacement("3K/IceCap1.ogg"       , 155860, 176411);
+        AddLoopReplacement("3K/IceCap2.ogg"       , 163241, 194634);
+        AddLoopReplacement("3K/KnucklesK.ogg"     , 74967, 0); // Origins does not loop this track
+        AddLoopReplacement("3K/LaunchBase1.ogg"   , 301429, 75356);
+        AddLoopReplacement("3K/LaunchBase1.ogg"   , 345426, 75356);
+        AddLoopReplacement("3K/LaunchBase2.ogg"   , 1, 82574);
+        AddLoopReplacement("3K/LavaReef1.ogg"     , 82394, 165594);
+        AddLoopReplacement("3K/LavaReef2.ogg"     , 440503, 264351);
+        AddLoopReplacement("3K/MarbleGarden1.ogg" , 89756, 153288);
+        AddLoopReplacement("3K/MarbleGarden2.ogg" , 22793, 371016);
+        AddLoopReplacement("3K/MushroomHill1.ogg" , 499847, 177404);
+        AddLoopReplacement("3K/MushroomHill2.ogg" , 336319, 162685);
+        AddLoopReplacement("3K/Options.ogg"       , 41104, 135411);
+        AddLoopReplacement("3K/Sandopolis1.ogg"   , 303715, 380198);
+        AddLoopReplacement("3K/Sandopolis2.ogg"   , 321489, 403521);
+        AddLoopReplacement("3K/SkySanctuary.ogg"  , 1, 286305);
+        AddLoopReplacement("3K/SkySanctuary.ogg"  , 160668, 286305);
+        AddLoopReplacement("3K/SlotBonus.ogg"     , 160668, 403618);
+        AddLoopReplacement("3K/SpecialStage.ogg"  , 247006, 413050);
+        AddLoopReplacement("3K/SpecialStageS0.ogg", 247006, 413050);
+        AddLoopReplacement("3K/SpecialStageS1.ogg", 247006, 413050);
+        AddLoopReplacement("3K/SpecialStageS2.ogg", 247006, 413050);
+        AddLoopReplacement("3K/SpecialStageS3.ogg", 247006, 413050);
+        AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188);
     }
 
     bool32 VideoSkipCB()

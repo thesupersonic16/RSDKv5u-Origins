@@ -275,6 +275,10 @@ int32 RSDK::PlayStream(const char *filename, uint32 slot, uint32 startPos, uint3
 
     ChannelInfo *channel = &channels[slot];
 
+    int32 speed = TO_FIXED(1);
+    if (!OnStreamPlay((char **)&filename, &slot, &startPos, &loopPoint, &speed))
+        return slot;
+
     LockAudioDevice();
 
     channel->soundID      = 0xFF;
@@ -286,7 +290,7 @@ int32 RSDK::PlayStream(const char *filename, uint32 slot, uint32 startPos, uint3
     channel->sampleLength = sfxList[SFX_COUNT - 1].length;
     channel->samplePtr    = sfxList[SFX_COUNT - 1].buffer;
     channel->bufferPos    = 0;
-    channel->speed        = TO_FIXED(1);
+    channel->speed        = speed;
 
     sprintf_s(streamFilePath, sizeof(streamFilePath), "Data/Music/%s", filename);
     streamStartPos  = startPos;

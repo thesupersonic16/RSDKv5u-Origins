@@ -615,7 +615,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
     </Link>
     <When Condition=" '$(VCPKG)'!='Y' ">
       <PostBuildEvent>
@@ -642,7 +642,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
     </Link>
     <When Condition=" '$(VCPKG)'!='Y' ">
       <PostBuildEvent>
@@ -673,7 +673,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
     </Link>
     <When Condition=" '$(VCPKG)'!='Y' ">
       <PostBuildEvent>
@@ -704,7 +704,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/$(Configuration)/;$(SolutionDir)dependencies/windows/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libtheora_static.lib;Shell32.lib;Shell32.lib;User32.lib;detours.lib;syelog.lib;steam_api64.lib</AdditionalDependencies>
     </Link>
     <When Condition=" '$(VCPKG)'!='Y' ">
       <PostBuildEvent>
