@@ -18,6 +18,8 @@ namespace RSDK
 
         // Add SFX loop point replacements
         AddSfxLoopReplacement("Stage/Airship.wav", 179497, 0);
+        AddSfxLoopReplacement("Stage/Airflow.wav", 82292, 0);
+        AddSfxLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0);
 
         // Should really be in the callback but this function at the monent is not async
         //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
@@ -71,9 +73,9 @@ namespace RSDK
 
     void OnSfxPlay(ChannelInfo *info)
     { 
-        for (int i = 0; i < sizeof(sfxChanges); ++i) {
+        for (int i = 0; i < sizeof(sfxChanges) / sizeof(SFXChangeInfo); ++i) {
             SFXChangeInfo *changeInfo = &sfxChanges[i];
-            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, sfxChanges->name) && info->loop == changeInfo->oldLoopPoint)
+            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, changeInfo->name) && info->loop == changeInfo->oldLoopPoint)
             {
                 info->loop = changeInfo->newLoopPoint;
                 return;
