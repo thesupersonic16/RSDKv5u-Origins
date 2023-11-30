@@ -1,7 +1,10 @@
 #include "windows.h"
 #include "SigScan.h"
 #include <Psapi.h>
+
+#ifndef _countof
 #define _countof(a) (sizeof(a)/sizeof(*(a)))
+#endif
 
 bool SigValid = true;
 const char* InvalidSig = nullptr;

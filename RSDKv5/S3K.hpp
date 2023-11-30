@@ -1,5 +1,6 @@
 #ifndef S3K_H
 #define S3K_H
+
 namespace RSDK
 {
     enum CharacterIDs : uint32 {
@@ -129,5 +130,10 @@ namespace RSDK
     void DrawSpecialStageRetryMessage();
     void LoadDefaultOriginsData(OriginsData *savedata);
 
-    } // namespace RSDK
+    void UploadCollisionData();
+    void DownloadCollisionData();
+    void RedirectSensorToOrigins(intptr_t address, CollisionSensor *sensor);
+
+} // namespace RSDK
+
 #endif // !ifdef S3K_H

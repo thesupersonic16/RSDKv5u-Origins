@@ -216,6 +216,7 @@ namespace RSDK
         // SoundFX
         AddLoopReplacement("Stage/Airship.wav", 179497, 0);
         AddLoopReplacement("Stage/Airflow.wav", 82292, 0);
+        AddLoopReplacement("Stage/Hover.wav", 67735, 0);
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0);
 
         // Music
@@ -302,6 +303,36 @@ namespace RSDK
         savedata->playMode        = 1;  // 1: Anniversary
         savedata->lastSaveSlot    = -1; // -1: No save
         savedata->lastCharacterID = ID_SONIC | ID_TAILS;
+    }
+
+    void UploadCollisionData()
+    {
+        *((Entity **)(0x143363150)) = collisionEntity;
+        *((uint32 *)0x14336316C)    = collisionTolerance;
+        *((uint32 *)0x143363170)    = useCollisionOffset ? 8 : 0;
+        memcpy((void *)0x143363158, &collisionOuter, sizeof(Hitbox));
+        memcpy((void *)0x143363160, &collisionInner, sizeof(Hitbox));
+        memcpy((void *)0x143D97160, tileLayers, sizeof(tileLayers));
+        memcpy((void *)0x1432D3150, collisionMasks, sizeof(collisionMasks));
+        memcpy((void *)0x143353150, tileInfo, sizeof(tileInfo));
+    }
+    void DownloadCollisionData()
+    {
+        collisionEntity = *((Entity **)(0x143363150));
+        collisionTolerance  = *((uint32 *)0x14336316C);
+        memcpy(&collisionOuter, (void *) 0x143363158, sizeof(Hitbox));
+        memcpy(&collisionInner, (void *) 0x143363160, sizeof(Hitbox));
+        memcpy(tileLayers, (void *)0x143D97160, sizeof(tileLayers));
+        memcpy(collisionMasks, (void *) 0x1432D3150, sizeof(collisionMasks));
+        memcpy(tileInfo, (void *) 0x143353150, sizeof(tileInfo));
+    }
+
+    void RedirectSensorToOrigins(intptr_t address, CollisionSensor* sensor)
+    {
+        UploadCollisionData();
+        auto sensorFunc = (void(__fastcall *)(CollisionSensor *sensor))(address);
+        sensorFunc(sensor);
+        DownloadCollisionData();
     }
 
 } // namespace RSDK

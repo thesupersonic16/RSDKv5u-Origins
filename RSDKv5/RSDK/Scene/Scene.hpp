@@ -141,6 +141,7 @@ struct TileInfo {
     uint8 rWallAngle;
     uint8 roofAngle;
     uint8 flag;
+    uint8 padding[3];
 };
 
 extern ScanlineInfo *scanlines;

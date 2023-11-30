@@ -71,7 +71,7 @@ extern uint8 floorAngleTolerance;
 extern uint8 wallAngleTolerance;
 extern uint8 roofAngleTolerance;
 
-inline void SetupCollisionConfig(int32 minDistance, uint8 lowTolerance, uint8 highTolerance, uint8 floorAngleTolerance, uint8 wallAngleTolerance,
+inline void SetupCollisionConfig(int8 minDistance, uint8 lowTolerance, uint8 highTolerance, uint8 floorAngleTolerance, uint8 wallAngleTolerance,
                                  uint8 roofAngleTolerance)
 {
     collisionMinimumDistance = TO_FIXED(minDistance);
