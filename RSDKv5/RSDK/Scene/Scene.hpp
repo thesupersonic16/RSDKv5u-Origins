@@ -257,7 +257,7 @@ inline int32 GetTileAngle(uint16 tile, uint8 cPlane, uint8 cMode)
         case CMODE_RWALL: return tileInfo[cPlane & 1][tile & 0xFFF].rWallAngle;
     }
 }
-inline void SetTileAngle(uint16 tile, uint8 cPlane, uint8 cMode, int32 angle)
+inline void SetTileAngle(uint16 tile, uint8 cPlane, uint8 cMode, uint8 angle)
 {
     switch (cMode) {
         default: break;

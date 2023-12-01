@@ -130,9 +130,10 @@ namespace RSDK
     void DrawSpecialStageRetryMessage();
     void LoadDefaultOriginsData(OriginsData *savedata);
 
+    // Collision workaround functions
     void UploadCollisionData();
     void DownloadCollisionData();
-    void RedirectSensorToOrigins(intptr_t address, CollisionSensor *sensor);
+    void RedirectSensorToOrigins(void* address, CollisionSensor *sensor);
 
 } // namespace RSDK
 

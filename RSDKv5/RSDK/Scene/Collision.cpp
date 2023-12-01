@@ -7,7 +7,12 @@ using namespace RSDK;
 #endif
 
 #if RETRO_REV0U
+#ifndef ORIGINS_COLLISION
 #define ORIGINS_COLLISION (1)
+#endif
+#if ORIGINS_COLLISION
+#include <SigScan.h>
+#endif
 // Not sure why its 8.0 in v5U, it's 4.0 in v5 and v4, the "fix" is here since 8.0 causes issues with chibi due to his lil hitbox
 #if RETRO_USE_ORIGINAL_CODE
 #define COLLISION_OFFSET (TO_FIXED(8))
@@ -2164,7 +2169,7 @@ void RSDK::FindFloorPosition(CollisionSensor *sensor)
 {
     // Bug workaround
 #if ORIGINS_COLLISION
-    RedirectSensorToOrigins(0x1400E1A10, sensor);
+    RedirectSensorToOrigins(SigFindFloorPosition(), sensor);
     return;
 #endif
 

@@ -68,6 +68,7 @@ namespace RSDK
             AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Use Coins", &globalVars->useCoins, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
+            AddViewableVariable("Music Type", &globalVars->ostStyle, VIEWVAR_INT8, 0, 6);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
     }
@@ -241,7 +242,9 @@ namespace RSDK
         AddLoopReplacement("3K/Hydrocity2.ogg"    , 1, 92643);
         AddLoopReplacement("3K/IceCap1.ogg"       , 155860, 176411);
         AddLoopReplacement("3K/IceCap2.ogg"       , 163241, 194634);
-        AddLoopReplacement("3K/KnucklesK.ogg"     , 74967, 0); // Origins does not loop this track
+        AddLoopReplacement("3K/Invincibility3.ogg", 39528, 113882);
+        AddLoopReplacement("3K/InvincibilityK.ogg", 30539, 0);
+        AddLoopReplacement("3K/KnucklesK.ogg", 74967, 0); // Origins does not loop this track
         AddLoopReplacement("3K/LaunchBase1.ogg"   , 301429, 75356);
         AddLoopReplacement("3K/LaunchBase1.ogg"   , 345426, 75356);
         AddLoopReplacement("3K/LaunchBase2.ogg"   , 1, 82574);
@@ -307,27 +310,23 @@ namespace RSDK
 
     void UploadCollisionData()
     {
+        // Sonic Origins 2.0.2 addresses
         *((Entity **)(0x143363150)) = collisionEntity;
         *((uint32 *)0x14336316C)    = collisionTolerance;
-        *((uint32 *)0x143363170)    = useCollisionOffset ? 8 : 0;
-        memcpy((void *)0x143363158, &collisionOuter, sizeof(Hitbox));
-        memcpy((void *)0x143363160, &collisionInner, sizeof(Hitbox));
         memcpy((void *)0x143D97160, tileLayers, sizeof(tileLayers));
         memcpy((void *)0x1432D3150, collisionMasks, sizeof(collisionMasks));
         memcpy((void *)0x143353150, tileInfo, sizeof(tileInfo));
     }
     void DownloadCollisionData()
     {
+        // Sonic Origins 2.0.2 addresses
         collisionEntity = *((Entity **)(0x143363150));
-        collisionTolerance  = *((uint32 *)0x14336316C);
-        memcpy(&collisionOuter, (void *) 0x143363158, sizeof(Hitbox));
-        memcpy(&collisionInner, (void *) 0x143363160, sizeof(Hitbox));
         memcpy(tileLayers, (void *)0x143D97160, sizeof(tileLayers));
         memcpy(collisionMasks, (void *) 0x1432D3150, sizeof(collisionMasks));
         memcpy(tileInfo, (void *) 0x143353150, sizeof(tileInfo));
     }
 
-    void RedirectSensorToOrigins(intptr_t address, CollisionSensor* sensor)
+    void RedirectSensorToOrigins(void* address, CollisionSensor* sensor)
     {
         UploadCollisionData();
         auto sensorFunc = (void(__fastcall *)(CollisionSensor *sensor))(address);
