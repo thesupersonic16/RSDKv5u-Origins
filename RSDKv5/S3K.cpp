@@ -268,6 +268,7 @@ namespace RSDK
         // SoundFX
         AddLoopReplacement("Stage/Airship.wav", 179497, 0);
         AddLoopReplacement("Stage/Airflow.wav", 82292, 0);
+        AddLoopReplacement("Stage/Drill.wav", 13611, 0);
         AddLoopReplacement("Stage/Hover.wav", 67735, 0);
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0);
 
