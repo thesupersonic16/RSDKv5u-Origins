@@ -72,6 +72,45 @@ namespace RSDK
         NOTIFY_STATS_CHARA_ACTION2,
     };
 
+    enum AchievementIDs {
+        ID_00_All_COMPLETE,
+        ID_01_SONIC1_WATCH_OPENING,
+        ID_02_SONICCD_WATCH_OPENING,
+        ID_03_SONIC2_WATCH_OPENING,
+        ID_04_SONIC3K_WATCH_OPENING,
+        ID_05_SONIC1_DEFEAT_MOTORA,
+        ID_06_SONIC1_BREATHING_COUNT,
+        ID_07_SONICCD_TIME_WARP,
+        ID_08_SONICCD_WIN_METAL_SONIC,
+        ID_09_SONIC2_DEFEAT_STINGER,
+        ID_10_SONIC2_WIN_THE_JACKPOT,
+        ID_11_SONIC3K_DEFEAT_RHINOBOT,
+        ID_12_SONIC3K_GET_ALL_BARRIERS,
+        ID_13_RING_COLLECTOR,
+        ID_14_DEFEAT_ENEMY_BY_SPIN_DASH,
+        ID_15_NOVICE_HERO,
+        ID_16_WATCH_AT_MUSEUM,
+        ID_17_CLEAR_FIRST_MISSION,
+        ID_18_KNUCKLES_GLIDING,
+        ID_19_TAILS_FLYING,
+        ID_20_CHALLENGE_BOSSRUSH,
+        ID_21_SONIC1_CLEAR_S_RANK_MISSION,
+        ID_22_SONICCD_CLEAR_S_RANK_MISSION,
+        ID_23_SONIC2_CLEAR_S_RANK_MISSION,
+        ID_24_SONIC3K_CLEAR_S_RANK_MISSION,
+        ID_25_PLAY_MIRRORING,
+        ID_26_MOVIE_MANIA,
+        ID_27_SOUND_MANIA,
+        ID_28_ART_MANIA,
+        ID_29_HERO_FOR_ALL,
+        ID_30_TRANSFORM_SUPER_SONIC,
+        ID_31_SONIC1_CLEAR_ALL_STAGE,
+        ID_32_SONICCD_CLEAR_ALL_STAGE,
+        ID_33_SONIC2_CLEAR_ALL_STAGE,
+        ID_34_SONIC3K_CLEAR_ALL_STAGE,
+        ID_35_CLEAR_ALL_TITLE,
+    };
+
     struct GlobalS3KVariables {
         uint8 gameMode;
         CharacterIDs playerID;
@@ -108,6 +147,8 @@ namespace RSDK
         bool32 playMode;
         int32  lastSaveSlot;
         uint32 lastCharacterID;
+        int32 totalRings;
+        int32 totalEnemies;
     };
 
     struct LoopPointChangeInfo {
@@ -126,6 +167,9 @@ namespace RSDK
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3);
     void AddLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint);
     void RegisterLoopPoints();
+    void UnlockAchievement(AchievementIDs id);
+    void RegisterAchievementID(const char *name);
+    void RegisterAchievements();
     bool32 VideoSkipCB();
     void DrawSpecialStageRetryMessage();
     void LoadDefaultOriginsData(OriginsData *savedata);

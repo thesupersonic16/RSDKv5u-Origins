@@ -12,16 +12,22 @@ namespace RSDK
     LoopPointChangeInfo loopChanges[0x100] {};
     OriginsData originsData;
     GlobalS3KVariables *globalVars = NULL;
+    SKU::AchievementID achievementIDs[0x40]{};
+    int32 achievementIDCount = 0;
     bool *usePathTracer            = NULL;
     bool usingLevelSelect          = false;
+    uint8 usedShields = 0;
     char streamFileName[0x40];
     bool isStreamFast = false;
+
+    // UnlockAchievement(ID_04_SONIC3K_WATCH_OPENING);
 
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
 
         RegisterLoopPoints();
+        RegisterAchievements();
         // Should really be in the callback but this function at the monent is not async
         //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
         if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), NULL))
@@ -131,36 +137,72 @@ namespace RSDK
     {
         switch (callback) {
             case NOTIFY_DEATH_EVENT:         PrintLog(PRINT_NORMAL, "NOTIFY: DeathEvent() -> %d", param1); break;
-            case NOTIFY_TOUCH_SIGNPOST:      PrintLog(PRINT_NORMAL, "NOTIFY: TouchSignPost() -> %d", param1); break;
-            case NOTIFY_HUD_ENABLE:          PrintLog(PRINT_NORMAL, "NOTIFY: HUDEnable() -> %d", param1); break;
+            case NOTIFY_TOUCH_SIGNPOST:      PrintLog(PRINT_POPUP, "NOTIFY: TouchSignPost() -> %d", param1); break;
+            case NOTIFY_HUD_ENABLE:          PrintLog(PRINT_POPUP, "NOTIFY: HUDEnable() -> %d", param1); break;
             case NOTIFY_ADD_COIN: 
                 globalVars->coinCount = CLAMP(globalVars->coinCount + param1, 0, 999);
                 break;
-            case NOTIFY_KILL_ENEMY:          PrintLog(PRINT_NORMAL, "NOTIFY: KillEnemy() -> %d", param1); break;
+            case NOTIFY_KILL_ENEMY:          PrintLog(PRINT_POPUP, "NOTIFY: KillEnemy() -> %d", param1); break;
             case NOTIFY_SAVESLOT_SELECT:
                 if (!usingLevelSelect)
                     originsData.lastSaveSlot = param1;
                 break;
-            case NOTIFY_FUTURE_PAST:         PrintLog(PRINT_NORMAL, "NOTIFY: FuturePast() -> %d", param1); break;
-            case NOTIFY_GOTO_FUTURE_PAST:    PrintLog(PRINT_NORMAL, "NOTIFY: GotoFuturePast() -> %d", param1); break;
-            case NOTIFY_BOSS_END:            PrintLog(PRINT_NORMAL, "NOTIFY: BossEnd() -> %d", param1); break;
-            case NOTIFY_SPECIAL_END:         PrintLog(PRINT_NORMAL, "NOTIFY: SpecialEnd() -> %d", param1); break;
-            case NOTIFY_DEBUGPRINT:          PrintLog(PRINT_NORMAL, "NOTIFY: DebugPrint() -> %d", param1); break;
-            case NOTIFY_KILL_BOSS:           PrintLog(PRINT_NORMAL, "NOTIFY: KillBoss() -> %d", param1); break;
-            case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_NORMAL, "NOTIFY: TouchEmerald() -> %d", param1); break;
-            case NOTIFY_STATS_ENEMY:         PrintLog(PRINT_NORMAL, "NOTIFY: StatsEnemy() -> %d, %d, %d", param1, param2, param3); break;
-            case NOTIFY_STATS_CHARA_ACTION:  PrintLog(PRINT_NORMAL, "NOTIFY: StatsCharaAction() -> %d, %d, %d", param1, param2, param3); break;
-            case NOTIFY_STATS_RING:          PrintLog(PRINT_NORMAL, "NOTIFY: StatsRing() -> %d", param1); break;
-            case NOTIFY_STATS_MOVIE:
-                sceneInfo.activeCategory = 0;
-                sceneInfo.listPos        = 0;
-                sceneInfo.state          = ENGINESTATE_LOAD;
-                PlayStream("Outro.ogg", 0, 0, 0, false);
-                LoadVideo("Outro.ogv", 0, VideoSkipCB);
+            case NOTIFY_FUTURE_PAST:         PrintLog(PRINT_POPUP, "NOTIFY: FuturePast() -> %d", param1); break;
+            case NOTIFY_GOTO_FUTURE_PAST:    PrintLog(PRINT_POPUP, "NOTIFY: GotoFuturePast() -> %d", param1); break;
+            case NOTIFY_BOSS_END:            PrintLog(PRINT_POPUP, "NOTIFY: BossEnd() -> %d", param1); break;
+            case NOTIFY_SPECIAL_END:         PrintLog(PRINT_POPUP, "NOTIFY: SpecialEnd() -> %d", param1); break;
+            case NOTIFY_DEBUGPRINT:          PrintLog(PRINT_POPUP, "NOTIFY: DebugPrint() -> %d", param1); break;
+            case NOTIFY_KILL_BOSS:           PrintLog(PRINT_POPUP, "NOTIFY: KillBoss() -> %d", param1); break;
+            case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_POPUP, "NOTIFY: TouchEmerald() -> %d", param1); break;
+            case NOTIFY_STATS_ENEMY:
+                originsData.totalEnemies += param1;
+                if (originsData.totalEnemies >= 50)
+                    UnlockAchievement(ID_15_NOVICE_HERO);
+                if (originsData.totalEnemies >= 200)
+                    UnlockAchievement(ID_29_HERO_FOR_ALL);
+                if (param3 >= 30)
+                    UnlockAchievement(ID_14_DEFEAT_ENEMY_BY_SPIN_DASH);
+                if (param3 >= 10)
+                    UnlockAchievement(ID_11_SONIC3K_DEFEAT_RHINOBOT);
                 break;
-            case NOTIFY_STATS_PARAM_1:       PrintLog(PRINT_NORMAL, "NOTIFY: StatsParam1() -> %d, %d, %d", param1, param2, param3); break;
-            case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_NORMAL, "NOTIFY: StatsParam2() -> %d", param1); break;
-            case NOTIFY_CHARACTER_SELECT:    PrintLog(PRINT_NORMAL, "NOTIFY: CharacterSelect() -> %d", param1); break;
+            case NOTIFY_STATS_CHARA_ACTION:
+                if (param1)
+                    UnlockAchievement(ID_30_TRANSFORM_SUPER_SONIC);
+                if (param2)
+                    UnlockAchievement(ID_19_TAILS_FLYING);
+                if (param3)
+                    PrintLog(PRINT_POPUP, "NOTIFY: StatsCharaAction() -> %d, %d, %d", param1, param2, param3);
+                break;
+            case NOTIFY_STATS_RING:
+                originsData.totalRings += param1;
+
+                if (originsData.totalRings >= 1000)
+                    UnlockAchievement(ID_13_RING_COLLECTOR);
+                break;
+            case NOTIFY_STATS_MOVIE:
+                if (param1)
+                {
+                    sceneInfo.activeCategory = 0;
+                    sceneInfo.listPos        = 0;
+                    sceneInfo.state          = ENGINESTATE_LOAD;
+                    PlayStream("Outro.ogg", 0, 0, 0, false);
+                    LoadVideo("Outro.ogv", 0, VideoSkipCB);
+                } else
+                    PrintLog(PRINT_POPUP, "NOTIFY: StatsMovie() -> %d, %d, %d", param1, param2, param3);
+                break;
+            case NOTIFY_STATS_PARAM_1:
+                if (param1)
+                    usedShields |= (1 << 0);
+                if (param2)
+                    usedShields |= (1 << 1);
+                if (param3)
+                    usedShields |= (1 << 2);
+
+                if (usedShields == 0b111)
+                    UnlockAchievement(ID_12_SONIC3K_GET_ALL_BARRIERS);
+                break;
+            case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_POPUP, "NOTIFY: StatsParam2() -> %d", param1); break;
+            case NOTIFY_CHARACTER_SELECT:    PrintLog(PRINT_POPUP, "NOTIFY: CharacterSelect() -> %d", param1); break;
             case NOTIFY_SPECIAL_RETRY:
                 if (globalVars->coinCount)
                 {
@@ -172,25 +214,34 @@ namespace RSDK
                 break;
             case NOTIFY_TOUCH_CHECKPOINT:    PrintLog(PRINT_NORMAL, "NOTIFY: TouchCheckpoint() -> %d", param1); break;
             case NOTIFY_ACT_FINISH:          PrintLog(PRINT_NORMAL, "NOTIFY: ActFinish() -> %d", param1); break;
-            case NOTIFY_1P_VS_SELECT:        PrintLog(PRINT_NORMAL, "NOTIFY: 1PVSSelect() -> %d", param1); break;
-            case NOTIFY_CONTROLLER_SUPPORT:  PrintLog(PRINT_NORMAL, "NOTIFY: ControllerSupport() -> %d", param1); break;
-            case NOTIFY_STAGE_RETRY:         PrintLog(PRINT_NORMAL, "NOTIFY: StageRetry() -> %d", param1); break;
-            case NOTIFY_SOUND_TRACK:         PrintLog(PRINT_NORMAL, "NOTIFY: SoundTrack() -> %d", param1); break;
-            case NOTIFY_GOOD_ENDING:         PrintLog(PRINT_NORMAL, "NOTIFY: GoodEnding() -> %d", param1); break;
+            case NOTIFY_1P_VS_SELECT:        PrintLog(PRINT_POPUP, "NOTIFY: 1PVSSelect() -> %d", param1); break;
+            case NOTIFY_CONTROLLER_SUPPORT:  PrintLog(PRINT_POPUP, "NOTIFY: ControllerSupport() -> %d", param1); break;
+            case NOTIFY_STAGE_RETRY:         PrintLog(PRINT_POPUP, "NOTIFY: StageRetry() -> %d", param1); break;
+            case NOTIFY_SOUND_TRACK:         PrintLog(PRINT_POPUP, "NOTIFY: SoundTrack() -> %d", param1); break;
+            case NOTIFY_GOOD_ENDING:         PrintLog(PRINT_POPUP, "NOTIFY: GoodEnding() -> %d", param1); break;
             case NOTIFY_BACK_TO_MAINMENU:    PrintLog(PRINT_NORMAL, "NOTIFY: BackToMainMenu() -> %d", param1); break;
             case NOTIFY_LEVEL_SELECT_MENU:   usingLevelSelect = param1; break;
             case NOTIFY_PLAYER_SET: 
                 if (!usingLevelSelect)
                     originsData.lastCharacterID = param1;
                 break;
-            case NOTIFY_EXTRAS_MODE:         PrintLog(PRINT_NORMAL, "NOTIFY: ExtrasMode() -> %d", param1); break;
-            case NOTIFY_SPIN_DASH_TYPE:      PrintLog(PRINT_NORMAL, "NOTIFY: SpindashType() -> %d", param1); break;
-            case NOTIFY_TIME_OVER:           PrintLog(PRINT_NORMAL, "NOTIFY: TimeOver() -> %d", param1); break;
-            case NOTIFY_TIMEATTACK_MODE:     PrintLog(PRINT_NORMAL, "NOTIFY: TimeAttackMode() -> %d", param1); break;
-            case NOTIFY_STATS_BREAK_OBJECT:  PrintLog(PRINT_NORMAL, "NOTIFY: StatsBreakObject() -> %d, %d", param1, param2); break;
-            case NOTIFY_STATS_SAVE_FUTURE:   PrintLog(PRINT_NORMAL, "NOTIFY: StatsSaveFuture() -> %d", param1); break;
-            case NOTIFY_STATS_CHARA_ACTION2: PrintLog(PRINT_NORMAL, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3); break;
+            case NOTIFY_EXTRAS_MODE:         PrintLog(PRINT_POPUP, "NOTIFY: ExtrasMode() -> %d", param1); break;
+            case NOTIFY_SPIN_DASH_TYPE:      PrintLog(PRINT_POPUP, "NOTIFY: SpindashType() -> %d", param1); break;
+            case NOTIFY_TIME_OVER:           PrintLog(PRINT_POPUP, "NOTIFY: TimeOver() -> %d", param1); break;
+            case NOTIFY_TIMEATTACK_MODE:     PrintLog(PRINT_POPUP, "NOTIFY: TimeAttackMode() -> %d", param1); break;
+            case NOTIFY_STATS_BREAK_OBJECT:  PrintLog(PRINT_POPUP, "NOTIFY: StatsBreakObject() -> %d, %d", param1, param2); break;
+            case NOTIFY_STATS_SAVE_FUTURE:   PrintLog(PRINT_POPUP, "NOTIFY: StatsSaveFuture() -> %d", param1); break;
+            case NOTIFY_STATS_CHARA_ACTION2: 
+                if (param1)
+                    UnlockAchievement(ID_18_KNUCKLES_GLIDING);
+                if (param2)
+                    PrintLog(PRINT_POPUP, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3);
+                if (param3)
+                    PrintLog(PRINT_POPUP, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3);
+                break;
+                break;
             default: PrintLog(PRINT_NORMAL, "NOTIFY: %d -> %d, %d, %d", callback, param1, param2, param3); break;
+                // 1003 might be score related?
         }
     }
 
@@ -267,6 +318,55 @@ namespace RSDK
         AddLoopReplacement("3K/SpecialStageS3.ogg", 247006, 413050);
         AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188);
     }
+    
+    void RegisterAchievementID(const char *name)
+    {
+        achievementIDs[achievementIDCount].identifier = name;
+        achievementIDs[achievementIDCount].idUnknown = achievementIDCount++;
+    }
+
+    void UnlockAchievement(AchievementIDs id) { SKU::TryUnlockAchievement(&achievementIDs[id]); }
+
+    void RegisterAchievements()
+    {
+        RegisterAchievementID("ID_00_All_COMPLETE");
+        RegisterAchievementID("ID_01_SONIC1_WATCH_OPENING");
+        RegisterAchievementID("ID_02_SONICCD_WATCH_OPENING");
+        RegisterAchievementID("ID_03_SONIC2_WATCH_OPENING");
+        RegisterAchievementID("ID_04_SONIC3K_WATCH_OPENING");
+        RegisterAchievementID("ID_05_SONIC1_DEFEAT_MOTORA");
+        RegisterAchievementID("ID_06_SONIC1_BREATHING_COUNT");
+        RegisterAchievementID("ID_07_SONICCD_TIME_WARP");
+        RegisterAchievementID("ID_08_SONICCD_WIN_METAL_SONIC");
+        RegisterAchievementID("ID_09_SONIC2_DEFEAT_STINGER");
+        RegisterAchievementID("ID_10_SONIC2_WIN_THE_JACKPOT");
+        RegisterAchievementID("ID_11_SONIC3K_DEFEAT_RHINOBOT");
+        RegisterAchievementID("ID_12_SONIC3K_GET_ALL_BARRIERS");
+        RegisterAchievementID("ID_13_RING_COLLECTOR");
+        RegisterAchievementID("ID_14_DEFEAT_ENEMY_BY_SPIN_DASH");
+        RegisterAchievementID("ID_15_NOVICE_HERO");
+        RegisterAchievementID("ID_16_WATCH_AT_MUSEUM");
+        RegisterAchievementID("ID_17_CLEAR_FIRST_MISSION");
+        RegisterAchievementID("ID_18_KNUCKLES_GLIDING");
+        RegisterAchievementID("ID_19_TAILS_FLYING");
+        RegisterAchievementID("ID_20_CHALLENGE_BOSSRUSH");
+        RegisterAchievementID("ID_21_SONIC1_CLEAR_S_RANK_MISSION ");
+        RegisterAchievementID("ID_22_SONICCD_CLEAR_S_RANK_MISSION");
+        RegisterAchievementID("ID_23_SONIC2_CLEAR_S_RANK_MISSION ");
+        RegisterAchievementID("ID_24_SONIC3K_CLEAR_S_RANK_MISSION");
+        RegisterAchievementID("ID_25_PLAY_MIRRORING");
+        RegisterAchievementID("ID_26_MOVIE_MANIA");
+        RegisterAchievementID("ID_27_SOUND_MANIA");
+        RegisterAchievementID("ID_28_ART_MANIA");
+        RegisterAchievementID("ID_29_HERO_FOR_ALL");
+        RegisterAchievementID("ID_30_TRANSFORM_SUPER_SONIC");
+        RegisterAchievementID("ID_31_SONIC1_CLEAR_ALL_STAGE");
+        RegisterAchievementID("ID_32_SONICCD_CLEAR_ALL_STAGE");
+        RegisterAchievementID("ID_33_SONIC2_CLEAR_ALL_STAGE");
+        RegisterAchievementID("ID_34_SONIC3K_CLEAR_ALL_STAGE");
+        RegisterAchievementID("ID_35_CLEAR_ALL_TITLE");
+    }
+
 
     bool32 VideoSkipCB()
     {
@@ -306,6 +406,7 @@ namespace RSDK
         savedata->playMode        = 1;  // 1: Anniversary
         savedata->lastSaveSlot    = -1; // -1: No save
         savedata->lastCharacterID = ID_SONIC | ID_TAILS;
+        savedata->totalRings      = 0;
     }
 
     void UploadCollisionData()

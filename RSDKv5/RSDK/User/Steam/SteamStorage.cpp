@@ -25,6 +25,13 @@ bool32 SteamUserStorage::TryLoadUserFile(const char *filename, void *buffer, uin
     bool32 success = false;
     memset(buffer, 0, size);
 
+    if (!SteamRemoteStorage()->FileExists(filename))
+    {
+        if (callback)
+            callback(STATUS_NOTFOUND);
+        return true;
+    }
+
     int fileSize = SteamRemoteStorage()->GetFileSize(filename);
     if (fileSize > size)
     {
