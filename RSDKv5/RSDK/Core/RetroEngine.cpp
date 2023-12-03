@@ -589,6 +589,9 @@ void RSDK::ProcessEngine()
             DrawDevString(outputString, 8, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
             break;
         }
+        case ENGINESTATE_GAME_FINISHED: {
+            OnGameFinish();
+        }
 #endif
     }
 }

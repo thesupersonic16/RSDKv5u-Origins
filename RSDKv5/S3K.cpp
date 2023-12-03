@@ -20,8 +20,6 @@ namespace RSDK
     char streamFileName[0x40];
     bool isStreamFast = false;
 
-    // UnlockAchievement(ID_04_SONIC3K_WATCH_OPENING);
-
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
@@ -69,6 +67,14 @@ namespace RSDK
 
     void OnStageLoad()
     {
+        if (!originsData.hasSeenIntro)
+        {
+            // This may cause issues if you the command line to jump to a stage on a new save
+            originsData.hasSeenIntro = true;
+            PlayStream("Intro.ogg", 0, 0, 0, false);
+            LoadVideo("Intro.ogv", 0, VideoSkipCB);
+            UnlockAchievement(ID_04_SONIC3K_WATCH_OPENING);
+        }
         if (globalVars) {
             AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 8);
             AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
@@ -77,6 +83,18 @@ namespace RSDK
             AddViewableVariable("Music Type", &globalVars->ostStyle, VIEWVAR_INT8, 0, 6);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
+        AddViewableVariable("Has Seen Intro", &originsData.hasSeenIntro, VIEWVAR_BOOL, false, true);
+    }
+    
+    // Runs on game finish state which is after the movie is played
+    void OnGameFinish()
+    {
+        UnlockAchievement(ID_34_SONIC3K_CLEAR_ALL_STAGE);
+
+        // Restart game
+        sceneInfo.activeCategory = 0;
+        sceneInfo.listPos        = 0;
+        sceneInfo.state          = ENGINESTATE_LOAD;
     }
 
     void OnSfxPlay(ChannelInfo *info)
@@ -93,7 +111,7 @@ namespace RSDK
 
     bool32 OnStreamPlay(char **filename, uint32* slot, uint32* startPos, uint32* loopPoint, int32* speed)
     {
-        PrintLog(PRINT_NORMAL, "OnStreamPlay(%s, %d, %d, %d)", *filename, *slot, *startPos, *loopPoint);
+        PrintLog(PRINT_NORMAL, "Playing Steam \"%s\" with a loop point of %d and begins on sample %d", *filename, *loopPoint, *startPos);
         
         // Replace loop point
         RETRO_HASH_MD5(hash);
@@ -124,7 +142,7 @@ namespace RSDK
             strcpy_s(streamFileName, name.c_str());
             *filename = streamFileName;
             channel->speed    = (int32)((isFast ? 1.2 : 1.0) * TO_FIXED(1));
-            PrintLog(PRINT_NORMAL, "Speed is now %f", isFast ? 1.2 : 1.0);
+            PrintLog(PRINT_NORMAL, "  Speed is now %f", isFast ? 1.2 : 1.0);
             bool speedChanged = isStreamFast != isFast;
             isStreamFast      = isFast;
             return !(channel->state == CHANNEL_STREAM && speedChanged);
@@ -182,9 +200,6 @@ namespace RSDK
             case NOTIFY_STATS_MOVIE:
                 if (param1)
                 {
-                    sceneInfo.activeCategory = 0;
-                    sceneInfo.listPos        = 0;
-                    sceneInfo.state          = ENGINESTATE_LOAD;
                     PlayStream("Outro.ogg", 0, 0, 0, false);
                     LoadVideo("Outro.ogv", 0, VideoSkipCB);
                 } else
@@ -408,6 +423,7 @@ namespace RSDK
         savedata->lastSaveSlot    = -1; // -1: No save
         savedata->lastCharacterID = ID_SONIC | ID_TAILS;
         savedata->totalRings      = 0;
+        savedata->hasSeenIntro    = false;
     }
 
     void UploadCollisionData()

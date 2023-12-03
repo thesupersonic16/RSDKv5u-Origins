@@ -149,6 +149,7 @@ namespace RSDK
         uint32 lastCharacterID;
         int32 totalRings;
         int32 totalEnemies;
+        bool32 hasSeenIntro;
     };
 
     struct LoopPointChangeInfo {
@@ -160,6 +161,7 @@ namespace RSDK
     void OnEngineInit();
     void OnFrameInit();
     void OnStageLoad();
+    void OnGameFinish();
     void OnEngineShutdown();
     void OnGlobalsLoaded(int32 *globals);
     void OnSfxPlay(ChannelInfo* info);
