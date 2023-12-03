@@ -91,6 +91,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
             return 0;
         }
 
+        OnEngineInit();
         InitEngine();
 #if RETRO_USE_MOD_LOADER
         // we confirmed the game actually is valid & running, lets start some callbacks
@@ -110,7 +111,6 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
     }
 
     RenderDevice::InitFPSCap();
-    OnEngineInit();
 
     while (RenderDevice::isRunning) {
         RenderDevice::ProcessEvents();

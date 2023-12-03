@@ -136,16 +136,17 @@ bool32 RSDK::LoadDataPack(const char *filePath, size_t fileOffset, bool32 useBuf
             uint8 b[4];
             for (int32 y = 0; y < 4; y++) {
                 ReadBytes(&info, b, 4);
-                dataFileList[f].hash[y] = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | (b[3] << 0);
+                dataFileList[dataFileListCount].hash[y] = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | (b[3] << 0);
             }
 
-            dataFileList[f].offset = ReadInt32(&info, false);
-            dataFileList[f].size   = ReadInt32(&info, false);
+            dataFileList[dataFileListCount].offset = ReadInt32(&info, false);
+            dataFileList[dataFileListCount].size   = ReadInt32(&info, false);
 
-            dataFileList[f].encrypted = (dataFileList[f].size & 0x80000000) != 0;
-            dataFileList[f].size &= 0x7FFFFFFF;
-            dataFileList[f].useFileBuffer = useBuffer;
-            dataFileList[f].packID        = dataPackCount;
+            dataFileList[dataFileListCount].encrypted = (dataFileList[dataFileListCount].size & 0x80000000) != 0;
+            dataFileList[dataFileListCount].size &= 0x7FFFFFFF;
+            dataFileList[dataFileListCount].useFileBuffer = useBuffer;
+            dataFileList[dataFileListCount].packID        = dataPackCount;
+            ++dataFileListCount;
         }
 
         dataPacks[dataPackCount].fileBuffer = NULL;
@@ -155,7 +156,6 @@ bool32 RSDK::LoadDataPack(const char *filePath, size_t fileOffset, bool32 useBuf
             ReadBytes(&info, dataPacks[dataPackCount].fileBuffer, info.fileSize);
         }
 
-        dataFileListCount += dataPacks[dataPackCount].fileCount;
         dataPackCount++;
 
         CloseFile(&info);

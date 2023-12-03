@@ -256,7 +256,7 @@ namespace RSDK
                 if (param1)
                     UnlockAchievement(ID_18_KNUCKLES_GLIDING);
                 if (param2)
-                    PrintLog(PRINT_POPUP, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3);
+                    PrintLog(PRINT_NORMAL, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3); // Amy Hammer
                 if (param3)
                     PrintLog(PRINT_POPUP, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3);
                 break;
