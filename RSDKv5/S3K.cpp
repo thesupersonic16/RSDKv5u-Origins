@@ -1,4 +1,5 @@
 #include "RSDK/Core/RetroEngine.hpp"
+#include "main.hpp"
 #include "S3K.hpp"
 #include "Helpers.h"
 #include "SigScan.h"
@@ -23,6 +24,11 @@ namespace RSDK
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
+
+        // Load data pack
+        char packPath[MAX_PATH];
+        sprintf_s(packPath, "%s\\Base.rsdk", modPath);
+        LoadDataPack(packPath, 0, false);
 
         RegisterLoopPoints();
         RegisterAchievements();

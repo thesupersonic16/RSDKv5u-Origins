@@ -12,6 +12,7 @@
 #endif
 
 ModLoader *ModLoaderData;
+char modPath[MAX_PATH];
 
 void GetRedirectedPath(const char *path, char *out) { ModLoaderData->GetRedirectedPath(path, out); }
 
@@ -42,6 +43,8 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
     INSTALL_HOOK(D3D11CreateDevice);
     // Nuke message box
     WRITE_MEMORY(SigNukeSystemReq(), (char)0xEB);
+
+    GetCurrentDirectoryA(MAX_PATH, modPath);
 
     ModLoaderData = modInfo->ModLoader;
 }

@@ -8,6 +8,8 @@
 #define DLLExport
 #endif
 
+extern char modPath[MAX_PATH];
+
 extern "C" {
 DLLExport int32 RSDK_main(int32 argc, char **argv, void *linkLogicPtr);
 }
