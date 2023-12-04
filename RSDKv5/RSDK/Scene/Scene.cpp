@@ -1032,14 +1032,6 @@ void RSDK::ProcessParallax(TileLayer *layer)
     if (!layer->xsize || !layer->ysize)
         return;
 
-    // Workaround to buggy rendering
-    *((ScreenInfo **)(0x14371C360)) = currentScreen;
-
-    memcpy((void *)0x143C94960, scanlines, sizeof(ScanlineInfo) * currentScreen->size.x);
-    ((void(__fastcall *)(TileLayer * layer))(0x1400FAAC0))(layer);
-    memcpy(scanlines, (void *)0x143C94960, sizeof(ScanlineInfo) * currentScreen->size.x);
-    return;
-
     int32 pixelWidth       = TILE_SIZE * layer->xsize;
     int32 pixelHeight      = TILE_SIZE * layer->ysize;
     ScanlineInfo *scanline = scanlines;
@@ -1449,16 +1441,6 @@ void RSDK::DrawLayerHScroll(TileLayer *layer)
 }
 void RSDK::DrawLayerVScroll(TileLayer *layer)
 {
-    // Workaround to buggy rendering
-    *((ScreenInfo **)(0x14371C360)) = currentScreen;
-
-    memcpy((void *)0x14371C370, &gfxLineBuffer, sizeof(gfxLineBuffer));
-    memcpy((void *)0x143C94960, &scanlines, sizeof(scanlines));
-    memcpy((void *)0x1434C3290, &fullPalette, sizeof(fullPalette));
-    memcpy((void *)0x143C97160, &tilesetPixels, sizeof(tilesetPixels));
-    ((void(__fastcall *)(TileLayer * layer))(0x1400FA2F0))(layer);
-
-    return;
     if (!layer->xsize || !layer->ysize)
         return;
 
@@ -1500,7 +1482,7 @@ void RSDK::DrawLayerVScroll(TileLayer *layer)
 
         ty = y >> 20;
         for (int32 l = 0; l < lineTileCount; ++l) {
-            layout += layer->xsize;
+            layout += 1 << layer->widthShift;
 
             if (++ty == layer->ysize) {
                 ty = 0;
@@ -1568,26 +1550,26 @@ void RSDK::DrawLayerVScroll(TileLayer *layer)
         }
 
         while (lineRemain > 0) {
-            layout += layer->xsize;
+            layout += 1 << layer->widthShift;
 
             if (++ty == layer->ysize) {
-            ty = 0;
-            layout -= layer->ysize << layer->widthShift;
-        }
+			    ty = 0;
+                layout -= layer->ysize << layer->widthShift;
+            }
 
             tileRemain = lineRemain >= TILE_SIZE ? TILE_SIZE : lineRemain;
-        if (*layout >= 0xFFFF) {
-            frameBuffer += currentScreen->pitch * sheetY;
-        }
-        else {
-            uint8 *pixels = &tilesetPixels[TILE_DATASIZE * (*layout & 0xFFF) + sheetX];
-            for (int32 y = 0; y < tileRemain; ++y) {
-                if (*pixels)
-                    *frameBuffer = activePalette[*pixels];
-
-                pixels += TILE_SIZE;
-                frameBuffer += currentScreen->pitch;
+            if (*layout >= 0xFFFF) {
+                frameBuffer += currentScreen->pitch * sheetY;
             }
+            else {
+                uint8 *pixels = &tilesetPixels[TILE_DATASIZE * (*layout & 0xFFF) + sheetX];
+                for (int32 y = 0; y < tileRemain; ++y) {
+                    if (*pixels)
+                        *frameBuffer = activePalette[*pixels];
+
+                    pixels += TILE_SIZE;
+                    frameBuffer += currentScreen->pitch;
+                }
             }
 
             lineRemain -= TILE_SIZE;
