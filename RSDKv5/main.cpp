@@ -24,6 +24,12 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
     MLEngine_LoadFile(&info, "retro/Sonic3ku.rsdk", 0xFF);
     
     RSDK::linkGameLogic = (RSDK::LogicLinkHandle)SigLinkGameLogic();
+	
+#if RETRO_RENDERDEVICE_DIRECTX9 || RETRO_RENDERDEVICE_DIRECTX11
+    RSDK::RenderDevice::hInstance = NULL;
+    RSDK::RenderDevice::hPrevInstance = NULL;
+    RSDK::RenderDevice::nShowCmd      = SW_SHOW;
+#endif
 
     // Force the console for now
     auto argc = 1;
