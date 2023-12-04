@@ -24,6 +24,12 @@ namespace RSDK
     uint16 flipBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     bool flipFramebuffer = false;
 
+    void CBOriginsDataLoad(int32 status)
+    {
+        if (status == SKU::STATUS_NOTFOUND)
+            LoadDefaultOriginsData(&originsData);
+    }
+
     void OnEngineInit()
     {
         usePathTracer = (bool *)SigusePathTracer();
@@ -35,10 +41,8 @@ namespace RSDK
 
         RegisterLoopPoints();
         RegisterAchievements();
-        // Should really be in the callback but this function at the monent is not async
         //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
-        if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), NULL))
-            LoadDefaultOriginsData(&originsData);
+        if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), CBOriginsDataLoad))
         *usePathTracer = originsData.usePathTracer;
         OnGlobalsLoaded(globalVarsPtr);
     }

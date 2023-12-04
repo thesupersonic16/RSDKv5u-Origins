@@ -1,4 +1,14 @@
 #if RETRO_REV02
+
+SteamUserStorage::SteamUserStorage()
+{
+    // Generate base path
+    char userProfile[0x40];
+    CSteamID steamID = SteamUser()->GetSteamID();
+    ExpandEnvironmentStringsA("%USERPROFILE%", userProfile, sizeof(userProfile));
+    sprintf_s(basePath, "%s\\AppData\\Roaming\\SEGA\\SonicOrigins\\steam\\%llu\\game\\", userProfile, steamID.ConvertToUint64());
+}
+
 int32 SteamUserStorage::TryAuth()
 {
     authStatus = SteamUser()->BLoggedOn() ? STATUS_OK : STATUS_ERROR;
@@ -22,57 +32,69 @@ bool32 SteamUserStorage::GetUsername(RSDK::String *name)
 
 bool32 SteamUserStorage::TryLoadUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status))
 {
-    bool32 success = false;
+    char filePath[MAX_PATH];
     memset(buffer, 0, size);
+    sprintf_s(filePath, "%s%s", basePath, filename);
 
-    if (!SteamRemoteStorage()->FileExists(filename))
+    FILE *handle      = NULL;
+    errno_t errorCode = fopen_s(&handle, filePath, "rb");
+    if (!errorCode)
+    {
+        // Opened
+        fread_s(buffer, size, 1, size, handle);
+        if (callback)
+            callback(STATUS_OK);
+    }
+    else if (errorCode == ENOENT)
     {
         if (callback)
             callback(STATUS_NOTFOUND);
-        return true;
-    }
-
-    int fileSize = SteamRemoteStorage()->GetFileSize(filename);
-    if (fileSize > size)
-    {
-        std::string str = __FILE__;
-        str += ": TryLoadUserFile() # TryLoadUserFile(";
-        str += filename;
-        str += ", ...) file is larger than buffer \r\n";
-        RSDK::PrintLog(PRINT_NORMAL, str.c_str());
     }
     else
     {
-        size = fileSize;
+        if (callback)
+            callback(STATUS_ERROR);        
     }
 
-    int bytesRead = SteamRemoteStorage()->FileRead(filename, buffer, size);
-
-    // Check if any bytes are read
-    success = bytesRead != 0;
-    if (callback)
-        callback(success ? STATUS_OK : STATUS_ERROR);
-
-    return success;
+    return true;
 }
 
 bool32 SteamUserStorage::TrySaveUserFile(const char *filename, void *buffer, uint32 size, void (*callback)(int32 status), bool32 compressed)
 {
-    bool32 success = SteamRemoteStorage()->FileWrite(filename, buffer, size);
+    char filePath[MAX_PATH];
+    sprintf_s(filePath, "%s%s", basePath, filename);
 
-    if (callback)
-        callback(success ? STATUS_OK : STATUS_ERROR);
+    FILE *handle = fopen(filePath, "wb");
+    if (handle) {
+        // Opened
+        fwrite(buffer, 1, size, handle);
+        if (callback)
+            callback(STATUS_OK);
+    }
+    else {
+        if (callback)
+            callback(STATUS_ERROR);
+    }
 
-    return success;
+    return true;
 }
 
 bool32 SteamUserStorage::TryDeleteUserFile(const char *filename, void (*callback)(int32 status))
 {
-    bool32 success = SteamRemoteStorage()->FileDelete(filename);
+    char filePath[MAX_PATH];
+    sprintf_s(filePath, "%s%s", basePath, filename);
 
-    if (callback)
-        callback(success ? STATUS_OK : STATUS_ERROR);
+    FILE *handle      = NULL;
+    errno_t errorCode = remove(filePath);
+    if (!errorCode) {
+        if (callback)
+            callback(STATUS_OK);
+    }
+    else {
+        if (callback)
+            callback(STATUS_ERROR);
+    }
 
-    return success;
+    return true;
 }
 #endif

@@ -1,5 +1,8 @@
 #if RETRO_REV02
 struct SteamUserStorage : UserStorage {
+    char basePath[MAX_PATH];
+
+    SteamUserStorage();
     int32 TryAuth();
     int32 TryInitStorage();
     bool32 GetUsername(String *userName);
