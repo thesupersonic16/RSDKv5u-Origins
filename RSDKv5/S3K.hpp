@@ -164,6 +164,8 @@ namespace RSDK
     void OnGameFinish();
     void OnEngineShutdown();
     void OnGlobalsLoaded(int32 *globals);
+    void OnDrawGroupDraw();
+    void OnInputProcess();
     void OnSfxPlay(ChannelInfo* info);
     bool32 OnStreamPlay(char **filename, uint32 *slot, uint32 *startPos, uint32 *loopPoint, int32 *speed);
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3);
