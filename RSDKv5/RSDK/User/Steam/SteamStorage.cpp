@@ -42,6 +42,7 @@ bool32 SteamUserStorage::TryLoadUserFile(const char *filename, void *buffer, uin
     {
         // Opened
         fread_s(buffer, size, 1, size, handle);
+        fclose(handle);
         if (callback)
             callback(STATUS_OK);
     }
@@ -64,10 +65,12 @@ bool32 SteamUserStorage::TrySaveUserFile(const char *filename, void *buffer, uin
     char filePath[MAX_PATH];
     sprintf_s(filePath, "%s%s", basePath, filename);
 
-    FILE *handle = fopen(filePath, "wb");
-    if (handle) {
+    FILE *handle;
+    errno_t errorCode = fopen_s(&handle, filePath, "wb");
+    if (!errorCode) {
         // Opened
         fwrite(buffer, 1, size, handle);
+        fclose(handle);
         if (callback)
             callback(STATUS_OK);
     }
