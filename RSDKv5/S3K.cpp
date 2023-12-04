@@ -28,6 +28,8 @@ namespace RSDK
     {
         if (status == SKU::STATUS_NOTFOUND)
             LoadDefaultOriginsData(&originsData);
+        *usePathTracer = originsData.usePathTracer;
+        OnGlobalsLoaded(globalVarsPtr);
     }
 
     void OnEngineInit()
@@ -42,9 +44,7 @@ namespace RSDK
         RegisterLoopPoints();
         RegisterAchievements();
         //SKU::TryDeleteUserFile("OriginsData.bin", NULL);
-        if (!SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), CBOriginsDataLoad))
-        *usePathTracer = originsData.usePathTracer;
-        OnGlobalsLoaded(globalVarsPtr);
+        SKU::TryLoadUserFile("OriginsData.bin", &originsData, sizeof(OriginsData), CBOriginsDataLoad);
     }
 
     void OnEngineShutdown()
