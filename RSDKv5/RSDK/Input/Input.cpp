@@ -308,6 +308,7 @@ void RSDK::ProcessInput()
             }
         }
     }
+    OnInputProcess();
 }
 
 void RSDK::ProcessInputDevices()

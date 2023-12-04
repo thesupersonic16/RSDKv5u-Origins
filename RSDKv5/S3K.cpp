@@ -17,9 +17,12 @@ namespace RSDK
     int32 achievementIDCount = 0;
     bool *usePathTracer            = NULL;
     bool usingLevelSelect          = false;
+    bool isMirrorMode              = false;
     uint8 usedShields = 0;
     char streamFileName[0x40];
     bool isStreamFast = false;
+    uint16 flipBuffer[SCREEN_XMAX * SCREEN_YSIZE];
+    bool flipFramebuffer = false;
 
     void OnEngineInit()
     {
@@ -81,6 +84,9 @@ namespace RSDK
             LoadVideo("Intro.ogv", 0, VideoSkipCB);
             UnlockAchievement(ID_04_SONIC3K_WATCH_OPENING);
         }
+
+        flipFramebuffer = isMirrorMode && sceneInfo.activeCategory != 0;
+
         if (globalVars) {
             AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 8);
             AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
@@ -89,6 +95,7 @@ namespace RSDK
             AddViewableVariable("Music Type", &globalVars->ostStyle, VIEWVAR_INT8, 0, 6);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
+        AddViewableVariable("Mirror Mode", &isMirrorMode, VIEWVAR_BOOL, false, true);
         AddViewableVariable("Has Seen Intro", &originsData.hasSeenIntro, VIEWVAR_BOOL, false, true);
     }
     
@@ -101,6 +108,36 @@ namespace RSDK
         sceneInfo.activeCategory = 0;
         sceneInfo.listPos        = 0;
         sceneInfo.state          = ENGINESTATE_LOAD;
+    }
+
+    void OnDrawGroupDraw()
+    {
+        // Flip frame buffer for mirror mode
+        if (flipFramebuffer && sceneInfo.currentDrawGroup == 14) {
+            // Remove overscan
+            int32 xSize = currentScreen->size.x + 8;
+            memcpy(flipBuffer, currentScreen->frameBuffer, sizeof(flipBuffer));
+
+            for (int32 x = 0; x < currentScreen->size.x; x++) {
+                for (int32 y = 0; y < currentScreen->size.y; y++) {
+                    currentScreen->frameBuffer[y * xSize + x] = flipBuffer[y * xSize + (currentScreen->size.x - x)];
+                }
+            }
+        }
+    }
+
+    void OnInputProcess()
+    {
+        if (flipFramebuffer && sceneInfo.state == ENGINESTATE_REGULAR) {
+            for (auto &input : controller)
+            {
+                InputState buffer = input.keyLeft;
+                input.keyLeft.down   = input.keyRight.down;
+                input.keyLeft.press  = input.keyRight.press;
+                input.keyRight.down  = buffer.down;
+                input.keyRight.press = buffer.press;
+            }
+        }
     }
 
     void OnSfxPlay(ChannelInfo *info)
