@@ -19,8 +19,7 @@ namespace RSDK
     bool usingLevelSelect          = false;
     bool isMirrorMode              = false;
     uint8 usedShields = 0;
-    char streamFileName[0x40];
-    bool isStreamFast = false;
+    float streamSpeed = 1.0f;
     uint16 flipBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     bool flipFramebuffer = false;
 
@@ -165,7 +164,8 @@ namespace RSDK
         GEN_HASH_MD5(*filename, hash);
         for (int i = 0; i < sizeof(loopChanges) / sizeof(LoopPointChangeInfo); ++i) {
             LoopPointChangeInfo *changeInfo = &loopChanges[i];
-            if (HASH_MATCH_MD5(hash, changeInfo->hash) && *loopPoint == changeInfo->oldLoopPoint) {
+            if (HASH_MATCH_MD5(hash, changeInfo->hash) && 
+                (changeInfo->oldLoopPoint == -1 || *loopPoint == changeInfo->oldLoopPoint)) {
                 *loopPoint = changeInfo->newLoopPoint;
                 break;
             }
@@ -173,26 +173,33 @@ namespace RSDK
 
         // Handle speed
         // The code built in S3K for handling the speed is faulty
-        std::string path = std::string("Data/Music/") + *filename;
-        std::string name = *filename;
-        bool isFast      = name.find("/F/") != std::string::npos;
+        bool isTransition = false;
+        std::string path  = std::string("Data/Music/") + *filename;
+        bool isFast       = path.find("/F/") != std::string::npos;
 
         if (isFast)
         {
             path.replace(path.find("/F/"), 3, "/");
-            name.replace(name.find("/F/"), 3, "/");
+            isTransition = !strcmp(streamFilePath, path.c_str());
+        }
+        else
+        {
+            path.replace(path.find("/3K/"), 4, "/3K/F/");
+            isTransition = !strcmp(streamFilePath, path.c_str());
         }
 
         ChannelInfo *channel = &channels[*slot];
-        if (!strcmp(streamFilePath, path.c_str()))
+        if (isTransition)
         {
-            strcpy_s(streamFileName, name.c_str());
-            *filename = streamFileName;
-            channel->speed    = (int32)((isFast ? 1.2 : 1.0) * TO_FIXED(1));
-            PrintLog(PRINT_NORMAL, "  Speed is now %f", isFast ? 1.2 : 1.0);
-            bool speedChanged = isStreamFast != isFast;
-            isStreamFast      = isFast;
-            return !(channel->state == CHANNEL_STREAM && speedChanged);
+            float newSpeed    = (isFast ? 1.2f : 1.0f);
+            bool speedChanged = streamSpeed != newSpeed;
+            if (speedChanged)
+            {
+                PrintLog(PRINT_NORMAL, "  Speed change %f -> %f", streamSpeed, newSpeed);
+                float ratio = streamSpeed / newSpeed;
+                *startPos        = GetChannelPos(*slot) * ratio;
+                streamSpeed      = newSpeed;
+            }
         }
         isFast = false;
         return true;
@@ -337,7 +344,8 @@ namespace RSDK
         // Music
         AddLoopReplacement("3K/AngelIsland1.ogg"  , 1, 161209);
         AddLoopReplacement("3K/AngelIsland2.ogg"  , 1, 95776);
-        AddLoopReplacement("3K/AzureLake.ogg"     , 96970, 150175);
+        AddLoopReplacement("3K/F/AngelIsland2.ogg", -1, 76620);
+        AddLoopReplacement("3K/AzureLake.ogg", 96970, 150175);
         AddLoopReplacement("3K/BalloonPark.ogg"   , 39500, 127295);
         AddLoopReplacement("3K/Boss.ogg"          , 141019, 132660);
         AddLoopReplacement("3K/CarnivalNight1.ogg", 1, 82540);
