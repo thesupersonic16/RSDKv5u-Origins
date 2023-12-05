@@ -210,7 +210,7 @@ namespace RSDK
             bool speedChanged = streamSpeed != newSpeed;
             if (speedChanged)
             {
-                PrintLog(PRINT_POPUP, "  Speed change %f -> %f", streamSpeed, newSpeed);
+                PrintLog(PRINT_NORMAL, "  Speed change %f -> %f", streamSpeed, newSpeed);
                 float ratio = streamSpeed / newSpeed;
                 *startPos        = GetChannelPos(*slot) * ratio;
                 streamSpeed      = newSpeed;
