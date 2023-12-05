@@ -4,6 +4,9 @@
 #include "Helpers.h"
 #include "SigScan.h"
 
+#if RETRO_USE_MOD_LOADER
+#define ADD_PUBLIC_FUNC(func) AddPublicFunction(#func, (void *)(func))
+#endif
 // Links to Audio.cpp
 extern char streamFilePath[0x40];
 
@@ -453,7 +456,6 @@ namespace RSDK
         RegisterAchievementID("ID_35_CLEAR_ALL_TITLE");
     }
 
-
     bool32 VideoSkipCB()
     {
         if (controller->keyA.press || controller->keyB.press || controller->keyStart.press) {
@@ -522,4 +524,31 @@ namespace RSDK
         DownloadCollisionData();
     }
 
+#if RETRO_USE_MOD_LOADER
+    OriginsData *GetOriginsData() { return &originsData; }
+
+    void AddPublicFunctions()
+    {
+        // Might aswell make everything a public function
+        ADD_PUBLIC_FUNC(OnEngineInit);
+        ADD_PUBLIC_FUNC(OnFrameInit);
+        ADD_PUBLIC_FUNC(OnStageLoad);
+        ADD_PUBLIC_FUNC(OnGameFinish);
+        ADD_PUBLIC_FUNC(OnEngineShutdown);
+        ADD_PUBLIC_FUNC(OnGlobalsLoaded);
+        ADD_PUBLIC_FUNC(OnDrawGroupDraw);
+        ADD_PUBLIC_FUNC(OnInputProcess);
+        ADD_PUBLIC_FUNC(OnSfxPlay);
+        ADD_PUBLIC_FUNC(OnStreamPlay);
+        ADD_PUBLIC_FUNC(OnCallbackNotify);
+        ADD_PUBLIC_FUNC(AddLoopReplacement);
+        ADD_PUBLIC_FUNC(RegisterLoopPoints);
+        ADD_PUBLIC_FUNC(UnlockAchievement);
+        ADD_PUBLIC_FUNC(RegisterAchievementID);
+        ADD_PUBLIC_FUNC(RegisterAchievements);
+        ADD_PUBLIC_FUNC(VideoSkipCB);
+        ADD_PUBLIC_FUNC(DrawSpecialStageRetryMessage);
+        ADD_PUBLIC_FUNC(LoadDefaultOriginsData);
+    }
+#endif
 } // namespace RSDK

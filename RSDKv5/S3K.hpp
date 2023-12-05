@@ -183,6 +183,10 @@ namespace RSDK
     void DownloadCollisionData();
     void RedirectSensorToOrigins(void* address, CollisionSensor *sensor);
 
-} // namespace RSDK
+#if RETRO_USE_MOD_LOADER
+    OriginsData *GetOriginsData();
+    void AddPublicFunctions();
+#endif
+    } // namespace RSDK
 
 #endif // !ifdef S3K_H
