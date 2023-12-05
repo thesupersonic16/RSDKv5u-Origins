@@ -173,9 +173,11 @@ namespace RSDK
 
         // Handle speed
         // The code built in S3K for handling the speed is faulty
-        bool isTransition = false;
-        std::string path  = std::string("Data/Music/") + *filename;
-        bool isFast       = path.find("/F/") != std::string::npos;
+        bool isTransition   = false;
+        std::string path    = std::string("Data/Music/") + *filename;
+        bool isFast         = path.find("/F/") != std::string::npos;
+        bool isSpecialStage = path.find("3K/SpecialStage") != std::string::npos;
+        float fastSpeed     = 1.2f; 
 
         if (isFast)
         {
@@ -188,14 +190,27 @@ namespace RSDK
             isTransition = !strcmp(streamFilePath, path.c_str());
         }
 
+        // Handle blue spheres
+        if (isSpecialStage)
+        {
+            // 1 = S0, 2 = S1, ...
+            int32 speedStage = 0;
+            size_t pos       = path.find("StageS");
+            if (isTransition = isFast = (pos != std::string::npos))
+            {
+                int32 speedStep = path.c_str()[pos + 6] - '0' + 1;
+                fastSpeed       = speedStep * 0.05f + 1.0f;
+            }
+        }
+
         ChannelInfo *channel = &channels[*slot];
         if (isTransition)
         {
-            float newSpeed    = (isFast ? 1.2f : 1.0f);
+            float newSpeed    = (isFast ? fastSpeed : 1.0f);
             bool speedChanged = streamSpeed != newSpeed;
             if (speedChanged)
             {
-                PrintLog(PRINT_NORMAL, "  Speed change %f -> %f", streamSpeed, newSpeed);
+                PrintLog(PRINT_POPUP, "  Speed change %f -> %f", streamSpeed, newSpeed);
                 float ratio = streamSpeed / newSpeed;
                 *startPos        = GetChannelPos(*slot) * ratio;
                 streamSpeed      = newSpeed;
@@ -382,11 +397,11 @@ namespace RSDK
         AddLoopReplacement("3K/SkySanctuary.ogg"  , 1, 286305);
         AddLoopReplacement("3K/SkySanctuary.ogg"  , 160668, 286305);
         AddLoopReplacement("3K/SlotBonus.ogg"     , 160668, 403618);
-        AddLoopReplacement("3K/SpecialStage.ogg"  , 247006, 413050);
-        AddLoopReplacement("3K/SpecialStageS0.ogg", 247006, 413050);
-        AddLoopReplacement("3K/SpecialStageS1.ogg", 247006, 413050);
-        AddLoopReplacement("3K/SpecialStageS2.ogg", 247006, 413050);
-        AddLoopReplacement("3K/SpecialStageS3.ogg", 247006, 413050);
+        AddLoopReplacement("3K/SpecialStage.ogg"  , -1, 413050);
+        AddLoopReplacement("3K/SpecialStageS0.ogg", -1, 413050);
+        AddLoopReplacement("3K/SpecialStageS1.ogg", -1, 413050);
+        AddLoopReplacement("3K/SpecialStageS2.ogg", -1, 413050);
+        AddLoopReplacement("3K/SpecialStageS3.ogg", -1, 413050);
         AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188);
     }
     
