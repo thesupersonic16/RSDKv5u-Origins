@@ -239,10 +239,10 @@ namespace RSDK
                 break;
             case NOTIFY_FUTURE_PAST:         PrintLog(PRINT_POPUP, "NOTIFY: FuturePast() -> %d", param1); break;
             case NOTIFY_GOTO_FUTURE_PAST:    PrintLog(PRINT_POPUP, "NOTIFY: GotoFuturePast() -> %d", param1); break;
-            case NOTIFY_BOSS_END:            PrintLog(PRINT_POPUP, "NOTIFY: BossEnd() -> %d", param1); break;
+            case NOTIFY_BOSS_END:            PrintLog(PRINT_NORMAL, "NOTIFY: BossEnd() -> %d", param1); break;
             case NOTIFY_SPECIAL_END:         PrintLog(PRINT_POPUP, "NOTIFY: SpecialEnd() -> %d", param1); break;
             case NOTIFY_DEBUGPRINT:          PrintLog(PRINT_POPUP, "NOTIFY: DebugPrint() -> %d", param1); break;
-            case NOTIFY_KILL_BOSS:           PrintLog(PRINT_POPUP, "NOTIFY: KillBoss() -> %d", param1); break;
+            case NOTIFY_KILL_BOSS:           PrintLog(PRINT_NORMAL, "NOTIFY: KillBoss() -> %d", param1); break;
             case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_POPUP, "NOTIFY: TouchEmerald() -> %d", param1); break;
             case NOTIFY_STATS_ENEMY:
                 originsData.totalEnemies += param1;
@@ -373,7 +373,7 @@ namespace RSDK
         AddLoopReplacement("3K/AngelIsland2.ogg"  , 1     , 95776 , true);
         AddLoopReplacement("3K/AzureLake.ogg"     , 96970 , 150175, true);
         AddLoopReplacement("3K/BalloonPark.ogg"   , 39500 , 127295, true);
-        AddLoopReplacement("3K/Boss.ogg"          , 141019, 132660, true);
+        AddLoopReplacement("3K/Boss.ogg"          , 141019, 53971 , true);
         AddLoopReplacement("3K/CarnivalNight1.ogg", 1     , 82540 , true);
         AddLoopReplacement("3K/CarnivalNight2.ogg", 1     , 82580 , true);
         AddLoopReplacement("3K/ChromeGadget.ogg"  , 1     , 113331, true);
@@ -383,6 +383,7 @@ namespace RSDK
         AddLoopReplacement("3K/DesertPalace.ogg"  , 1     , 81737 , true);
         AddLoopReplacement("3K/Doomsday.ogg"      , 626645, 661556, true);
         AddLoopReplacement("3K/EndlessMine.ogg"   , 76852 , 158392, true);
+        AddLoopReplacement("3K/FinalBoss.ogg"     , 721127, 722165, true);
         AddLoopReplacement("3K/FlyingBattery1.ogg", 17688 , 265102, true);
         AddLoopReplacement("3K/FlyingBattery2.ogg", 70605 , 353223, true);
         AddLoopReplacement("3K/GachaBonus.ogg"    , 160668, 239783, false);
@@ -400,6 +401,8 @@ namespace RSDK
         AddLoopReplacement("3K/LavaReef2.ogg"     , 440503, 264351, true);
         AddLoopReplacement("3K/MarbleGarden1.ogg" , 89756 , 153288, true);
         AddLoopReplacement("3K/MarbleGarden2.ogg" , 22793 , 371016, true);
+        AddLoopReplacement("3K/Miniboss.ogg"      , 70625 , 132660, true);//
+        AddLoopReplacement("3K/MiniBossK.ogg"     , 70625 , 132660, true);
         AddLoopReplacement("3K/MushroomHill1.ogg" , 499847, 177404, true);
         AddLoopReplacement("3K/MushroomHill2.ogg" , 336319, 162685, true);
         AddLoopReplacement("3K/Options.ogg"       , 41104 , 135411, false);
@@ -414,7 +417,9 @@ namespace RSDK
         AddLoopReplacement("3K/SpecialStageS2.ogg", -1    , 413050, false);
         AddLoopReplacement("3K/SpecialStageS3.ogg", -1    , 413050, false);
         AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188, false);
-        AddLoopReplacement("3K/StageBoss.ogg"     , 141019, 132660, true);
+        AddLoopReplacement("3K/StageBoss.ogg"     , 141019, 53971 , true);
+        AddLoopReplacement("3K/Super.ogg"         , 141502, 0     , true);
+        AddLoopReplacement("3K/TheDoomsday.ogg"   , 605488, 722165, true);
     }
     
     void RegisterAchievementID(const char *name)
