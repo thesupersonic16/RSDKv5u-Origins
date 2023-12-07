@@ -188,7 +188,8 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
                     if (((engine.version == 5 && sceneInfo.state != ENGINESTATE_DEVMENU)
                          || (engine.version != 5 && RSDK::Legacy::gameMode != RSDK::Legacy::ENGINE_DEVMENU))
                         && devMenu.modsChanged) {
-                        engine.version = 0;
+                        int32 preVersion = engine.version;
+                        engine.version   = 0;
 #else
                     if (sceneInfo.state != ENGINESTATE_DEVMENU && devMenu.modsChanged) {
 #endif
@@ -202,8 +203,6 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 #endif
 
 #if RETRO_REV0U
-                        int32 preVersion = engine.version;
-
                         DetectEngineVersion();
                         if (!engine.version)
                             engine.version = preVersion;
