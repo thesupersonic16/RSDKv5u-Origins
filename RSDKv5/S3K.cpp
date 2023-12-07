@@ -180,7 +180,11 @@ namespace RSDK
         std::string path    = std::string("Data/Music/") + *filename;
         bool isFast         = path.find("/F/") != std::string::npos;
         bool isSpecialStage = path.find("3K/SpecialStage") != std::string::npos;
-        float fastSpeed     = 1.2f; 
+        float fastSpeed     = 1.2f;
+
+        // Return if not 3K music
+        if (path.find("/3K/") == std::string::npos)
+            return true;
 
         if (isFast)
         {
