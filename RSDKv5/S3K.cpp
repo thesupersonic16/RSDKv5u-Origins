@@ -332,7 +332,7 @@ namespace RSDK
         }
     }
 
-    void AddLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint)
+    void AddLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint, bool32 use12FastLoop)
     {
         // Find empty slot
         int slot = 0;
@@ -348,64 +348,73 @@ namespace RSDK
         GEN_HASH_MD5(filename, info->hash);
         info->oldLoopPoint = oldLoopPoint;
         info->newLoopPoint = newLoopPoint;
+
+        // Create fast loop for 1.2x
+        if (use12FastLoop)
+        {
+            std::string newFileName = std::string(filename);
+            newFileName             = newFileName.replace(newFileName.find("3K/"), 3, "3K/F/");
+            float loopPoint = (44100.0f / 48000.0f) * newLoopPoint;
+            AddLoopReplacement(newFileName.c_str(), -1, (int32)loopPoint, false);
+        }
     }
 
     void RegisterLoopPoints()
     {
         // SoundFX
-        AddLoopReplacement("Stage/Airship.wav", 179497, 0);
-        AddLoopReplacement("Stage/Airflow.wav", 82292, 0);
-        AddLoopReplacement("Stage/Drill.wav", 13611, 0);
-        AddLoopReplacement("Stage/Hover.wav", 67735, 0);
-        AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0);
+        AddLoopReplacement("Stage/Airship.wav"      , 179497, 0, false);
+        AddLoopReplacement("Stage/Airflow.wav"      , 82292 , 0, false);
+        AddLoopReplacement("Stage/Drill.wav"        , 13611 , 0, false);
+        AddLoopReplacement("Stage/Hover.wav"        , 67735 , 0, false);
+        AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0, false);
 
         // Music
-        AddLoopReplacement("3K/AngelIsland1.ogg"  , 1, 161209);
-        AddLoopReplacement("3K/AngelIsland2.ogg"  , 1, 95776);
-        AddLoopReplacement("3K/F/AngelIsland2.ogg", -1, 76620);
-        AddLoopReplacement("3K/AzureLake.ogg", 96970, 150175);
-        AddLoopReplacement("3K/BalloonPark.ogg"   , 39500, 127295);
-        AddLoopReplacement("3K/Boss.ogg"          , 141019, 132660);
-        AddLoopReplacement("3K/CarnivalNight1.ogg", 1, 82540);
-        AddLoopReplacement("3K/CarnivalNight2.ogg", 1, 82580);
-        AddLoopReplacement("3K/ChromeGadget.ogg"  , 1, 113331);
-        AddLoopReplacement("3K/Competition.ogg"   , 1, 103687);
-        AddLoopReplacement("3K/DeathEgg1.ogg"     , 1, 181948);
-        AddLoopReplacement("3K/DeathEgg2.ogg"     , 1, 158988);
-        AddLoopReplacement("3K/DesertPalace.ogg"  , 1, 81737);
-        AddLoopReplacement("3K/Doomsday.ogg"      , 626645, 661556);
-        AddLoopReplacement("3K/EndlessMine.ogg"   , 76852, 158392);
-        AddLoopReplacement("3K/FlyingBattery1.ogg", 17688, 265102);
-        AddLoopReplacement("3K/FlyingBattery2.ogg", 70605, 353223);
-        AddLoopReplacement("3K/GachaBonus.ogg"    , 160668, 239783);
-        AddLoopReplacement("3K/Hydrocity1.ogg"    , 1, 164780);
-        AddLoopReplacement("3K/Hydrocity2.ogg"    , 1, 92643);
-        AddLoopReplacement("3K/IceCap1.ogg"       , 155860, 176411);
-        AddLoopReplacement("3K/IceCap2.ogg"       , 163241, 194634);
-        AddLoopReplacement("3K/Invincibility3.ogg", 39528, 113882);
-        AddLoopReplacement("3K/InvincibilityK.ogg", 30539, 0);
-        AddLoopReplacement("3K/KnucklesK.ogg", 74967, 0); // Origins does not loop this track
-        AddLoopReplacement("3K/LaunchBase1.ogg"   , 301429, 75356);
-        AddLoopReplacement("3K/LaunchBase1.ogg"   , 345426, 75356);
-        AddLoopReplacement("3K/LaunchBase2.ogg"   , 1, 82574);
-        AddLoopReplacement("3K/LavaReef1.ogg"     , 82394, 165594);
-        AddLoopReplacement("3K/LavaReef2.ogg"     , 440503, 264351);
-        AddLoopReplacement("3K/MarbleGarden1.ogg" , 89756, 153288);
-        AddLoopReplacement("3K/MarbleGarden2.ogg" , 22793, 371016);
-        AddLoopReplacement("3K/MushroomHill1.ogg" , 499847, 177404);
-        AddLoopReplacement("3K/MushroomHill2.ogg" , 336319, 162685);
-        AddLoopReplacement("3K/Options.ogg"       , 41104, 135411);
-        AddLoopReplacement("3K/Sandopolis1.ogg"   , 303715, 380198);
-        AddLoopReplacement("3K/Sandopolis2.ogg"   , 321489, 403521);
-        AddLoopReplacement("3K/SkySanctuary.ogg"  , 1, 286305);
-        AddLoopReplacement("3K/SkySanctuary.ogg"  , 160668, 286305);
-        AddLoopReplacement("3K/SlotBonus.ogg"     , 160668, 403618);
-        AddLoopReplacement("3K/SpecialStage.ogg"  , -1, 413050);
-        AddLoopReplacement("3K/SpecialStageS0.ogg", -1, 413050);
-        AddLoopReplacement("3K/SpecialStageS1.ogg", -1, 413050);
-        AddLoopReplacement("3K/SpecialStageS2.ogg", -1, 413050);
-        AddLoopReplacement("3K/SpecialStageS3.ogg", -1, 413050);
-        AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188);
+        AddLoopReplacement("3K/AngelIsland1.ogg"  , 1     , 161209, true);
+        AddLoopReplacement("3K/AngelIsland2.ogg"  , 1     , 95776 , true);
+        AddLoopReplacement("3K/AzureLake.ogg"     , 96970 , 150175, true);
+        AddLoopReplacement("3K/BalloonPark.ogg"   , 39500 , 127295, true);
+        AddLoopReplacement("3K/Boss.ogg"          , 141019, 132660, true);
+        AddLoopReplacement("3K/CarnivalNight1.ogg", 1     , 82540 , true);
+        AddLoopReplacement("3K/CarnivalNight2.ogg", 1     , 82580 , true);
+        AddLoopReplacement("3K/ChromeGadget.ogg"  , 1     , 113331, true);
+        AddLoopReplacement("3K/Competition.ogg"   , 1     , 103687, true);
+        AddLoopReplacement("3K/DeathEgg1.ogg"     , 1     , 181948, true);
+        AddLoopReplacement("3K/DeathEgg2.ogg"     , 1     , 158988, true);
+        AddLoopReplacement("3K/DesertPalace.ogg"  , 1     , 81737 , true);
+        AddLoopReplacement("3K/Doomsday.ogg"      , 626645, 661556, true);
+        AddLoopReplacement("3K/EndlessMine.ogg"   , 76852 , 158392, true);
+        AddLoopReplacement("3K/FlyingBattery1.ogg", 17688 , 265102, true);
+        AddLoopReplacement("3K/FlyingBattery2.ogg", 70605 , 353223, true);
+        AddLoopReplacement("3K/GachaBonus.ogg"    , 160668, 239783, false);
+        AddLoopReplacement("3K/Hydrocity1.ogg"    , 1     , 164780, true);
+        AddLoopReplacement("3K/Hydrocity2.ogg"    , 1     , 92643 , true);
+        AddLoopReplacement("3K/IceCap1.ogg"       , 155860, 176411, true);
+        AddLoopReplacement("3K/IceCap2.ogg"       , 163241, 194634, true);
+        AddLoopReplacement("3K/Invincibility3.ogg", 39528 , 113882, true);
+        AddLoopReplacement("3K/InvincibilityK.ogg", 30539 , 0     , true);
+        AddLoopReplacement("3K/KnucklesK.ogg"     , 74967 , 0     , false); // Origins does not loop this track
+        AddLoopReplacement("3K/LaunchBase1.ogg"   , 301429, 75356 , true);
+        AddLoopReplacement("3K/LaunchBase1.ogg"   , 345426, 75356 , true);
+        AddLoopReplacement("3K/LaunchBase2.ogg"   , 1     , 82574 , true);
+        AddLoopReplacement("3K/LavaReef1.ogg"     , 82394 , 165594, true);
+        AddLoopReplacement("3K/LavaReef2.ogg"     , 440503, 264351, true);
+        AddLoopReplacement("3K/MarbleGarden1.ogg" , 89756 , 153288, true);
+        AddLoopReplacement("3K/MarbleGarden2.ogg" , 22793 , 371016, true);
+        AddLoopReplacement("3K/MushroomHill1.ogg" , 499847, 177404, true);
+        AddLoopReplacement("3K/MushroomHill2.ogg" , 336319, 162685, true);
+        AddLoopReplacement("3K/Options.ogg"       , 41104 , 135411, false);
+        AddLoopReplacement("3K/Sandopolis1.ogg"   , 303715, 380198, true);
+        AddLoopReplacement("3K/Sandopolis2.ogg"   , 321489, 403521, true);
+        AddLoopReplacement("3K/SkySanctuary.ogg"  , 1     , 286305, true);
+        AddLoopReplacement("3K/SkySanctuary.ogg"  , 160668, 286305, true);
+        AddLoopReplacement("3K/SlotBonus.ogg"     , 160668, 403618, false);
+        AddLoopReplacement("3K/SpecialStage.ogg"  , -1    , 413050, false);
+        AddLoopReplacement("3K/SpecialStageS0.ogg", -1    , 413050, false);
+        AddLoopReplacement("3K/SpecialStageS1.ogg", -1    , 413050, false);
+        AddLoopReplacement("3K/SpecialStageS2.ogg", -1    , 413050, false);
+        AddLoopReplacement("3K/SpecialStageS3.ogg", -1    , 413050, false);
+        AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188, false);
+        AddLoopReplacement("3K/StageBoss.ogg"     , 141019, 132660, true);
     }
     
     void RegisterAchievementID(const char *name)
