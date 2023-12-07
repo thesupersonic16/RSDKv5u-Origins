@@ -907,7 +907,7 @@ void RSDK::SaveMods()
 {
     ModInfo *cur = currentMod;
     char modBuf[0x100];
-    sprintf_s(modBuf, sizeof(modBuf), "%smods/", SKU::userFileDir);
+    sprintf_s(modBuf, sizeof(modBuf), "%smods_decomp/", SKU::userFileDir);
     fs::path modPath(modBuf);
 
     SortMods();
