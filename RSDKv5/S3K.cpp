@@ -150,7 +150,8 @@ namespace RSDK
     { 
         for (int i = 0; i < sizeof(loopChanges) / sizeof(LoopPointChangeInfo); ++i) {
             LoopPointChangeInfo *changeInfo = &loopChanges[i];
-            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, changeInfo->hash) && info->loop == changeInfo->oldLoopPoint)
+            if (HASH_MATCH_MD5(sfxList[info->soundID].hash, changeInfo->hash)
+                && (changeInfo->oldLoopPoint == -1 || info->loop == changeInfo->oldLoopPoint))
             {
                 info->loop = changeInfo->newLoopPoint;
                 return;
@@ -371,6 +372,8 @@ namespace RSDK
         AddLoopReplacement("Stage/Drill.wav"        , 13611 , 0, false);
         AddLoopReplacement("Stage/Hover.wav"        , 67735 , 0, false);
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0, false);
+        AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
+        AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);
 
         // Music
         AddLoopReplacement("3K/AngelIsland1.ogg"  , 1     , 161209, true);
