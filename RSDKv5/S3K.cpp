@@ -247,7 +247,7 @@ namespace RSDK
             case NOTIFY_SPECIAL_END:         PrintLog(PRINT_POPUP, "NOTIFY: SpecialEnd() -> %d", param1); break;
             case NOTIFY_DEBUGPRINT:          PrintLog(PRINT_POPUP, "NOTIFY: DebugPrint() -> %d", param1); break;
             case NOTIFY_KILL_BOSS:           PrintLog(PRINT_NORMAL, "NOTIFY: KillBoss() -> %d", param1); break;
-            case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_POPUP, "NOTIFY: TouchEmerald() -> %d", param1); break;
+            case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_NORMAL, "NOTIFY: TouchEmerald() -> %d", param1); break;
             case NOTIFY_STATS_ENEMY:
                 originsData.totalEnemies += param1;
                 if (originsData.totalEnemies >= 50)
@@ -295,7 +295,7 @@ namespace RSDK
             case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_POPUP, "NOTIFY: StatsParam2() -> %d", param1); break;
             case NOTIFY_CHARACTER_SELECT:    PrintLog(PRINT_POPUP, "NOTIFY: CharacterSelect() -> %d", param1); break;
             case NOTIFY_SPECIAL_RETRY:
-                if (globalVars->coinCount)
+                if (globalVars->useCoins && !param1 && globalVars->coinCount)
                 {
                     // Using devmenu as we have no other way to display this message
                     OpenDevMenu();
