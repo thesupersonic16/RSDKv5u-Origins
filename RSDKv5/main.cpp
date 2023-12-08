@@ -13,11 +13,19 @@
 
 ModLoader *ModLoaderData;
 char modPath[MAX_PATH];
+bool entryCalled = false;
 
 void GetRedirectedPath(const char *path, char *out) { ModLoaderData->GetRedirectedPath(path, out); }
 
-HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11CreateDevice"))
+HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11CreateDevice"),
+    void *pAdapter, UINT DriverType, void* Software, UINT Flags, void *pFeatureLevels, UINT FeatureLevels,
+    UINT SDKVersion, void **ppDevice, void *pFeatureLevel, void **ppImmediateContext)
 {
+    if (entryCalled)
+        return originalD3D11CreateDevice(pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels,
+            SDKVersion, ppDevice, pFeatureLevel, ppImmediateContext);
+    entryCalled = true;
+
     // Workaround for selecting datapack for the modloader
     auto MLEngine_LoadFile = (void(__fastcall *)(FileInfo *info, const char *filePath, int openMode))(SigEngine_LoadFile());
     FileInfo info;
