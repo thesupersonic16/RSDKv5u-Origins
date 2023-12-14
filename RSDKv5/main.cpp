@@ -54,6 +54,7 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
 
 extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
 {
+	SigLinkGameLogic();
     INSTALL_HOOK(D3D11CreateDevice);
     // Nuke message box
     WRITE_MEMORY(SigNukeSystemReq(), (char)0xEB);
