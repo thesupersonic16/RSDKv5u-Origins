@@ -20,7 +20,7 @@ namespace RSDK
     int32 achievementIDCount = 0;
     bool *usePathTracer            = NULL;
     bool usingLevelSelect          = false;
-    bool isMirrorMode              = false;
+    bool32 isMirrorMode            = false;
     uint8 usedShields = 0;
     float streamSpeed = 1.0f;
     uint16 flipBuffer[SCREEN_XMAX * SCREEN_YSIZE];
