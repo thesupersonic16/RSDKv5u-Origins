@@ -528,21 +528,12 @@ namespace RSDK
         memcpy((void *)0x1432D3150, collisionMasks, sizeof(collisionMasks));
         memcpy((void *)0x143353150, tileInfo, sizeof(tileInfo));
     }
-    void DownloadCollisionData()
-    {
-        // Sonic Origins 2.0.2 addresses
-        collisionEntity = *((Entity **)(0x143363150));
-        memcpy(tileLayers, (void *)0x143D97160, sizeof(tileLayers));
-        memcpy(collisionMasks, (void *) 0x1432D3150, sizeof(collisionMasks));
-        memcpy(tileInfo, (void *) 0x143353150, sizeof(tileInfo));
-    }
 
     void RedirectSensorToOrigins(void* address, CollisionSensor* sensor)
     {
         UploadCollisionData();
         auto sensorFunc = (void(__fastcall *)(CollisionSensor *sensor))(address);
         sensorFunc(sensor);
-        DownloadCollisionData();
     }
 
 #if RETRO_USE_MOD_LOADER
