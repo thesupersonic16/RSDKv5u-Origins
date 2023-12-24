@@ -1848,45 +1848,45 @@ int32 RSDK::GetAchievementIndexByID(const char *id)
 }
 int32 RSDK::GetAchievementCount() { return (int32)achievementList.size(); }
 
-void RSDK::StateMachineRun(void (*state)())
+void RSDK::StateMachineRun(void (*state)(void*), void* data)
 {
     bool32 skipState = false;
 
     for (int32 h = 0; h < (int32)stateHookList.size(); ++h) {
         if (stateHookList[h].priority && stateHookList[h].state == state && stateHookList[h].hook)
-            skipState |= stateHookList[h].hook(skipState);
+            skipState |= stateHookList[h].hook(skipState, data);
     }
 
     if (!skipState && state)
-        state();
+        state(data);
 
     for (int32 h = 0; h < (int32)stateHookList.size(); ++h) {
         if (!stateHookList[h].priority && stateHookList[h].state == state && stateHookList[h].hook)
-            stateHookList[h].hook(skipState);
+            stateHookList[h].hook(skipState, data);
     }
 }
 
-bool32 RSDK::HandleRunState_HighPriority(void *state)
+bool32 RSDK::HandleRunState_HighPriority(void *state, void *data)
 {
     bool32 skipState = false;
 
     for (int32 h = 0; h < (int32)stateHookList.size(); ++h) {
         if (stateHookList[h].priority && stateHookList[h].state == state && stateHookList[h].hook)
-            skipState |= stateHookList[h].hook(skipState);
+            skipState |= stateHookList[h].hook(skipState, data);
     }
 
     return skipState;
 }
 
-void RSDK::HandleRunState_LowPriority(void *state, bool32 skipState)
+void RSDK::HandleRunState_LowPriority(void *state, void *data, bool32 skipState)
 {
     for (int32 h = 0; h < (int32)stateHookList.size(); ++h) {
         if (!stateHookList[h].priority && stateHookList[h].state == state && stateHookList[h].hook)
-            stateHookList[h].hook(skipState);
+            stateHookList[h].hook(skipState, data);
     }
 }
 
-void RSDK::RegisterStateHook(void (*state)(), bool32 (*hook)(bool32 skippedState), bool32 priority)
+void RSDK::RegisterStateHook(void (*state)(void *), bool32 (*hook)(bool32 skippedState, void *data), bool32 priority)
 {
     if (!state)
         return;

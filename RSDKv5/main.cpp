@@ -52,10 +52,20 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
     return E_FAIL;
 }
 
+#ifdef RETRO_USE_MOD_LOADER
+HOOK(void, __fastcall, StateMachineRun, 0x1400AD8F0, void (**state)(void *), void *data) {
+    if (*state)
+        RSDK::StateMachineRun(*state, data);
+}
+#endif
+
 extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
 {
 	SigLinkGameLogic();
     INSTALL_HOOK(D3D11CreateDevice);
+#ifdef RETRO_USE_MOD_LOADER
+    INSTALL_HOOK(StateMachineRun);
+#endif
     // Nuke message box
     WRITE_MEMORY(SigNukeSystemReq(), (char)0xEB);
 
