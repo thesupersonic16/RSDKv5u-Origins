@@ -1,20 +1,21 @@
 #if RETRO_REV02
 
 struct EOSCore : UserCore {
-    void Shutdown()
-    {
-        // closes EGS API
-    }
+    void *platformHandle; // EOS_HPlatform
+    void *authHandle;     // EOS_HAuth
+    void *ecomHandle;     // EOS_HEcom
+    void *authToken;      // EOS_Auth_Token
+    char *accountId;
+
+    bool32 hasPlusDLC = false;
+
+    void Shutdown();
     bool32 CheckAPIInitialized()
     {
         // check if EGS is running
         return true;
     }
-    void FrameInit()
-    {
-        UserCore::StageLoad();
-        // runs EGS callbacks
-    }
+    void FrameInit();
     int32 GetUserLanguage()
     {
         // gets the language from EGS
@@ -50,6 +51,7 @@ struct EOSCore : UserCore {
     }
     virtual bool32 ShowLimitedVideoOptions(int32 id) { return false; }
     void InitInputDevices() { RSDK::InitInputDevices(); }
+    bool32 CheckDLC(uint8 id) { return id == 0 ? hasPlusDLC : false; }
 };
 
 EOSCore *InitEOSCore();

@@ -1,7 +1,17 @@
 #include "RSDK/Core/RetroEngine.hpp"
-#include "steam_api.h"
-
 #include "iniparser/iniparser.h"
+
+#if RETRO_USERCORE_STEAM
+#include "steam_api.h"
+#endif
+
+#if RETRO_USERCORE_EOS
+#include "eos/eos_init.h"
+#include "eos/eos_sdk.h"
+#include "eos/eos_auth.h"
+#include "eos/eos_ecom.h"
+#endif
+
 
 // ====================
 // API Cores
@@ -54,17 +64,21 @@ void RSDK::SKU::InitUserCore()
 #endif
 
     // Initalize platform-specific subsystems here
+    userCore = nullptr;
 
 #if RETRO_USERCORE_STEAM
-    userCore = InitSteamCore();
+    if (!userCore)
+        userCore = InitSteamCore();
 #endif
 
 #if RETRO_USERCORE_EOS
-    userCore = InitEOSCore();
+    if (!userCore)
+        userCore = InitEOSCore();
 #endif
 
 #if RETRO_USERCORE_NX
-    userCore = InitNXCore();
+    if (!userCore)
+        userCore = InitNXCore();
 #endif
 
 #if RETRO_USERCORE_DUMMY

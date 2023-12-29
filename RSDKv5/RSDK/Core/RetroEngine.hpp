@@ -200,14 +200,14 @@ enum GameRegions {
 // ============================
 // USER CORE BACKENDS
 // ============================
-#define RETRO_USERCORE_ID (1)
+#define RETRO_USERCORE_ID (0b00010001) // This is modified to allow multiple user cores
 
 #define RETRO_USERCORE_DUMMY (!(RETRO_USERCORE_ID & 0x80)) // bit 7 disables the dummy core stuff if you ever need that for some odd reason
-#define RETRO_USERCORE_STEAM (RETRO_USERCORE_ID == 1)
-#define RETRO_USERCORE_PS4   (RETRO_USERCORE_ID == 2)
-#define RETRO_USERCORE_XB1   (RETRO_USERCORE_ID == 3)
-#define RETRO_USERCORE_NX    (RETRO_USERCORE_ID == 4)
-#define RETRO_USERCORE_EOS   (RETRO_USERCORE_ID == 5)
+#define RETRO_USERCORE_STEAM (RETRO_USERCORE_ID & 0b00000001)
+#define RETRO_USERCORE_PS4   (RETRO_USERCORE_ID & 0b00000010)
+#define RETRO_USERCORE_XB1   (RETRO_USERCORE_ID & 0b00000100)
+#define RETRO_USERCORE_NX    (RETRO_USERCORE_ID & 0b00001000)
+#define RETRO_USERCORE_EOS   (RETRO_USERCORE_ID & 0b00010000)
 
 // ============================
 // ENGINE CONFIG

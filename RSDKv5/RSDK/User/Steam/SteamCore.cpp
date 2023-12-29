@@ -60,7 +60,10 @@ SKU::SteamCore *InitSteamCore()
     SteamCore *core = new SteamCore;
 
     // Should already be initialised
-    SteamAPI_Init();
+    if (!SteamAPI_Init())
+    {
+        return nullptr;
+    }
 
     if (achievements)
         delete achievements;

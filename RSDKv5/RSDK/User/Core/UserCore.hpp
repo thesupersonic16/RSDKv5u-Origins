@@ -1,6 +1,9 @@
 #ifndef USER_CORE_H
 #define USER_CORE_H
 
+// Links to main.cpp
+extern const char *epicToken;
+
 namespace RSDK
 {
 
