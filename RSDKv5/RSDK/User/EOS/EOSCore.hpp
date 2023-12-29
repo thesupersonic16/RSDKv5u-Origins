@@ -1,11 +1,15 @@
 #if RETRO_REV02
 
 struct EOSCore : UserCore {
-    void *platformHandle; // EOS_HPlatform
-    void *authHandle;     // EOS_HAuth
-    void *ecomHandle;     // EOS_HEcom
-    void *authToken;      // EOS_Auth_Token
+    void *platformHandle;     // EOS_HPlatform
+    void *authHandle;         // EOS_HAuth
+    void *ecomHandle;         // EOS_HEcom
+    void *achievementsHandle; // EOS_HAchievements
+    void *connectHandle;      // EOS_HConnect
+    void *authToken;          // EOS_Auth_Token
+    void *productUserId;      // EOS_ProductUserId
     char *accountId;
+    bool32 init = false;
 
     bool32 hasPlusDLC = false;
 

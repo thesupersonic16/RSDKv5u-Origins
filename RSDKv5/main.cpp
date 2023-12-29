@@ -176,6 +176,17 @@ EOS_Auth_CopyUserAuthToken(EOS_HAuth Handle, const EOS_Auth_CopyUserAuthTokenOpt
     return EOS_EResult::EOS_UnexpectedError;
 }
 
+EOS_DECLARE_FUNC(EOS_EResult)
+EOS_Auth_CopyIdToken(EOS_HAuth Handle, const EOS_Auth_CopyIdTokenOptions *Options, EOS_Auth_IdToken **OutIdToken)
+{
+    if (EOSHandle) {
+        void *address = GetProcAddress(EOSHandle, "EOS_Auth_CopyIdToken");
+        return ((EOS_EResult(EOS_CALL *)(EOS_HAuth, const EOS_Auth_CopyIdTokenOptions *, EOS_Auth_IdToken **))(address))(
+            Handle, Options, OutIdToken);
+    }
+    return EOS_EResult::EOS_UnexpectedError;
+}
+
 EOS_DECLARE_FUNC(EOS_EResult) EOS_EpicAccountId_ToString(EOS_EpicAccountId AccountId, char *OutBuffer, int32_t *InOutBufferLength)
 {
     if (EOSHandle) {
@@ -199,6 +210,54 @@ EOS_DECLARE_FUNC(void) EOS_Platform_Tick(EOS_HPlatform Handle)
     if (EOSHandle) {
         void *address = GetProcAddress(EOSHandle, "EOS_Platform_Tick");
         ((void(EOS_CALL *)(EOS_HPlatform))(address))(Handle);
+    }
+}
+
+EOS_DECLARE_FUNC(EOS_HConnect) EOS_Platform_GetConnectInterface(EOS_HPlatform Handle)
+{
+    if (EOSHandle) {
+        void *address = GetProcAddress(EOSHandle, "EOS_Platform_GetConnectInterface");
+        return ((EOS_HConnect(EOS_CALL *)(EOS_HPlatform))(address))(Handle);
+    }
+    return nullptr;
+}
+
+EOS_DECLARE_FUNC(EOS_HAchievements) EOS_Platform_GetAchievementsInterface(EOS_HPlatform Handle)
+{
+    if (EOSHandle) {
+        void *address = GetProcAddress(EOSHandle, "EOS_Platform_GetAchievementsInterface");
+        return ((EOS_HAchievements(EOS_CALL *)(EOS_HPlatform))(address))(Handle);
+    }
+    return nullptr;
+}
+
+EOS_DECLARE_FUNC(void)
+EOS_Achievements_UnlockAchievements(EOS_HAchievements Handle, const EOS_Achievements_UnlockAchievementsOptions *Options, void *ClientData,
+                                    const EOS_Achievements_OnUnlockAchievementsCompleteCallback CompletionDelegate)
+{
+    if (EOSHandle) {
+        void *address = GetProcAddress(EOSHandle, "EOS_Achievements_UnlockAchievements");
+        ((void(EOS_CALL *)(EOS_HAchievements, const EOS_Achievements_UnlockAchievementsOptions *, void *,
+                           const EOS_Achievements_OnUnlockAchievementsCompleteCallback))(address))(Handle, Options, ClientData, CompletionDelegate);
+    }
+}
+
+EOS_DECLARE_FUNC(void)
+EOS_Connect_Login(EOS_HConnect Handle, const EOS_Connect_LoginOptions *Options, void *ClientData,
+                                    const EOS_Connect_OnLoginCallback CompletionDelegate)
+{
+    if (EOSHandle) {
+        void *address = GetProcAddress(EOSHandle, "EOS_Connect_Login");
+        ((void(EOS_CALL *)(EOS_HConnect, const EOS_Connect_LoginOptions *, void *, const EOS_Connect_OnLoginCallback))(address))(
+            Handle, Options, ClientData, CompletionDelegate);
+    }
+}
+
+EOS_DECLARE_FUNC(void) EOS_Auth_IdToken_Release(EOS_Auth_IdToken* IdToken)
+{
+    if (EOSHandle) {
+        void *address = GetProcAddress(EOSHandle, "EOS_Auth_IdToken_Release");
+        ((void(EOS_CALL *)(EOS_Auth_IdToken*))(address))(IdToken);
     }
 }
 #endif

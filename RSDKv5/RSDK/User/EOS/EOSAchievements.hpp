@@ -26,10 +26,7 @@ struct EOSAchievements : UserAchievements {
     {
         // remove achievement from the list
     }
-    void TryUnlockAchievement(AchievementID *id)
-    {
-        // unload EGS achievement
-    }
+    void TryUnlockAchievement(AchievementID *id);
 };
 
 #endif

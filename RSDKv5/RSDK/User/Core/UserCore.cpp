@@ -10,6 +10,7 @@
 #include "eos/eos_sdk.h"
 #include "eos/eos_auth.h"
 #include "eos/eos_ecom.h"
+#include "eos/eos_achievements.h"
 #endif
 
 
