@@ -8,7 +8,7 @@ using namespace RSDK;
 
 #if RETRO_REV0U
 #ifndef ORIGINS_COLLISION
-#define ORIGINS_COLLISION (1)
+#define ORIGINS_COLLISION (0)
 #endif
 #if ORIGINS_COLLISION
 #include <SigScan.h>
@@ -768,6 +768,10 @@ bool32 RSDK::ObjectTileCollision(Entity *entity, uint16 cLayers, uint8 cMode, ui
 }
 bool32 RSDK::ObjectTileGrip(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, int32 tolerance)
 {
+    UploadCollisionData();
+    auto func     = (bool32(__fastcall *)(Entity *entity, uint16 cLayers, uint8 cMode, uint8 cPlane, int32 xOffset, int32 yOffset, int32 tolerance))(0x1400E3360);
+    bool32 result = func(entity, cLayers, cMode, cPlane, xOffset, yOffset, tolerance);
+    return result;
     int32 layerID   = 1;
     bool32 collided = false;
     int32 posX      = FROM_FIXED(xOffset + entity->position.x);
