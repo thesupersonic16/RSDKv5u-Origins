@@ -336,9 +336,10 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
         size_t endPos;
         if ((endPos = token.find_first_of(" ")) != std::string::npos)
             token = token.substr(0, endPos);
-        epicToken = (const char*)malloc(token.size() + 1);
-        memset((void*)epicToken, 0, token.size() + 1);
-        memcpy((void *)epicToken, token.c_str(), token.size());
+        if (epicToken = (const char*)malloc(token.size() + 1)) {
+            memset((void*)epicToken, 0, token.size() + 1);
+            memcpy((void *)epicToken, token.c_str(), token.size());
+        }
     }
 
     ModLoaderData = modInfo->ModLoader;
