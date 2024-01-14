@@ -509,7 +509,7 @@ namespace RSDK
     {
         savedata->version         = 0;
         savedata->disableLives    = true;
-        savedata->usePathTracer   = false; // Due to an engine bug path tracer will be disabled by default
+        savedata->usePathTracer   = true;
         savedata->useCoins        = true;
         savedata->coinCount       = 100;
         savedata->playMode        = 1;  // 1: Anniversary

@@ -8,3 +8,4 @@ extern void *SigLinkGameLogic();
 extern void *SigNukeSystemReq();
 extern void *SigEngine_LoadFile();
 extern void *SigFindFloorPosition();
+extern void *SigStateMachineRun();

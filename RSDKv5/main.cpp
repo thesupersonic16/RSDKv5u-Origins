@@ -309,7 +309,8 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
 }
 
 #ifdef RETRO_USE_MOD_LOADER
-HOOK(void, __fastcall, StateMachineRun, 0x1400AD8F0, void (**state)(void *), void *data) {
+HOOK(void, __fastcall, StateMachineRun, SigStateMachineRun(), void (**state)(void *), void *data)
+{
     if (*state)
         RSDK::StateMachineRun(*state, data);
 }
