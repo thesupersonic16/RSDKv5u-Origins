@@ -440,10 +440,12 @@ void RSDK::LoadSfx(char *filename, uint8 plays, uint8 scope)
 
     if (id != (uint16)-1)
         LoadSfxToSlot(filename, id, plays, scope);
+		//PrintLog(PRINT_NORMAL, "loading sfx \"%s\", at id %d", filename, id); //ONLY USE THIS TO DEBUG A SOUND THAT GETS LOADED AND CRASHES. THIS GETS THE SOUND PATH OF THE ID.
 }
 
 int32 RSDK::PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
 {
+	//PrintLog(PRINT_NORMAL, "Playing sfx id %d, with looppoint %d", sfx, loopPoint); //ONLY USE THIS TO DEBUG A SOUND THAT GETS LOADED AND CRASHES. THIS SHOWS THE PLAYING ID WITH THE LOOP.
     if (sfx >= SFX_COUNT || !sfxList[sfx].scope)
         return -1;
 

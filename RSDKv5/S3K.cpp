@@ -370,7 +370,9 @@ namespace RSDK
         AddLoopReplacement("Stage/Airship.wav"      , 179497, 0, false);
         AddLoopReplacement("Stage/Airflow.wav"      , 82292 , 0, false);
         AddLoopReplacement("Stage/Drill.wav"        , 13611 , 0, false);
+		AddLoopReplacement("Stage/Drill.wav"        , 43643 , 0, false); // MGZ2 Boss drill loop and LBZ1 falling building... wtf
         AddLoopReplacement("Stage/Hover.wav"        , 67735 , 0, false);
+		AddLoopReplacement("Stage/TakeOff.wav"      , 33159 , 0, false); // LBZ2 Death Egg takeoff
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0, false);
         AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
         AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);
