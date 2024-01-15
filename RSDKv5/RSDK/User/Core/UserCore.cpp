@@ -507,15 +507,15 @@ void RSDK::LoadSettingsINI()
     }
     else {
         videoSettings.windowed       = true;
-        videoSettings.bordered       = false;
-        videoSettings.exclusiveFS    = true;
+        videoSettings.bordered       = true;
+        videoSettings.exclusiveFS    = false;
         videoSettings.vsync          = true;
         videoSettings.tripleBuffered = false;
         videoSettings.shaderSupport  = true;
         videoSettings.pixWidth       = DEFAULT_PIXWIDTH;
         videoSettings.fsWidth        = 0;
-        videoSettings.windowWidth    = videoSettings.pixWidth * 1;
-        videoSettings.windowHeight   = SCREEN_YSIZE * 1;
+        videoSettings.windowWidth    = videoSettings.pixWidth * 4;
+        videoSettings.windowHeight   = SCREEN_YSIZE * 4;
         videoSettings.fsHeight       = 0;
         videoSettings.refreshRate    = 60;
         videoSettings.shaderID       = SHADER_NONE;

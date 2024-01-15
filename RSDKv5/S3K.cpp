@@ -425,7 +425,7 @@ namespace RSDK
         AddLoopReplacement("3K/SpecialStageS3.ogg", -1    , 413050, false);
         AddLoopReplacement("3K/SphereBonus.ogg"   , 154449, 228188, false);
         AddLoopReplacement("3K/StageBoss.ogg"     , 141019, 53971 , true);
-        AddLoopReplacement("3K/Super.ogg"         , 141502, 0     , true);
+        AddLoopReplacement("3K/Super.ogg"         , 141502, 1     , true);
         AddLoopReplacement("3K/TheDoomsday.ogg"   , 605488, 722165, true);
     }
     
