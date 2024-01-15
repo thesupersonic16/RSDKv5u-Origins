@@ -57,45 +57,45 @@ set(RETRO_FILES
     dependencies/all/iniparser/iniparser.cpp
     dependencies/all/iniparser/dictionary.cpp
     dependencies/all/miniz/miniz.c
-	dependencies/all/steam_sdk/isteamapplist.h
-	dependencies/all/steam_sdk/isteamapps.h
-	dependencies/all/steam_sdk/isteamappticket.h
-	dependencies/all/steam_sdk/isteamclient.h
-	dependencies/all/steam_sdk/isteamcontroller.h
-	dependencies/all/steam_sdk/isteamfriends.h
-	dependencies/all/steam_sdk/isteamgamecoordinator.h
-	dependencies/all/steam_sdk/isteamgameserver.h
-	dependencies/all/steam_sdk/isteamgameserverstats.h
-	dependencies/all/steam_sdk/isteamhtmlsurface.h
-	dependencies/all/steam_sdk/isteamhttp.h
-	dependencies/all/steam_sdk/isteaminventory.h
-	dependencies/all/steam_sdk/isteammasterserverupdater.h
-	dependencies/all/steam_sdk/isteammatchmaking.h
-	dependencies/all/steam_sdk/isteammusic.h
-	dependencies/all/steam_sdk/isteammusicremote.h
-	dependencies/all/steam_sdk/isteamnetworking.h
-	dependencies/all/steam_sdk/isteamparentalsettings.h
-	dependencies/all/steam_sdk/isteamps3overlayrenderer.h
-	dependencies/all/steam_sdk/isteamremotestorage.h
-	dependencies/all/steam_sdk/isteamscreenshots.h
-	dependencies/all/steam_sdk/isteamugc.h
-	dependencies/all/steam_sdk/isteamuser.h
-	dependencies/all/steam_sdk/isteamuserstats.h
-	dependencies/all/steam_sdk/isteamutils.h
-	dependencies/all/steam_sdk/isteamvideo.h
-	dependencies/all/steam_sdk/luautils.h
-	dependencies/all/steam_sdk/matchmakingtypes.h
-	dependencies/all/steam_sdk/steam_api.h
-	dependencies/all/steam_sdk/steam_api_flat.h
-	dependencies/all/steam_sdk/steam_api_internal.h
-	dependencies/all/steam_sdk/steam_gameserver.h
-	dependencies/all/steam_sdk/steamclientpublic.h
-	dependencies/all/steam_sdk/steamencryptedappticket.h
-	dependencies/all/steam_sdk/steamhttpenums.h
-	dependencies/all/steam_sdk/steamps3params.h
-	dependencies/all/steam_sdk/steamtypes.h
-	dependencies/all/steam_sdk/steamuniverse.h
-	dependencies/all/steam_sdk/steamworks.h
+    dependencies/all/steam_sdk/isteamapplist.h
+    dependencies/all/steam_sdk/isteamapps.h
+    dependencies/all/steam_sdk/isteamappticket.h
+    dependencies/all/steam_sdk/isteamclient.h
+    dependencies/all/steam_sdk/isteamcontroller.h
+    dependencies/all/steam_sdk/isteamfriends.h
+    dependencies/all/steam_sdk/isteamgamecoordinator.h
+    dependencies/all/steam_sdk/isteamgameserver.h
+    dependencies/all/steam_sdk/isteamgameserverstats.h
+    dependencies/all/steam_sdk/isteamhtmlsurface.h
+    dependencies/all/steam_sdk/isteamhttp.h
+    dependencies/all/steam_sdk/isteaminventory.h
+    dependencies/all/steam_sdk/isteammasterserverupdater.h
+    dependencies/all/steam_sdk/isteammatchmaking.h
+    dependencies/all/steam_sdk/isteammusic.h
+    dependencies/all/steam_sdk/isteammusicremote.h
+    dependencies/all/steam_sdk/isteamnetworking.h
+    dependencies/all/steam_sdk/isteamparentalsettings.h
+    dependencies/all/steam_sdk/isteamps3overlayrenderer.h
+    dependencies/all/steam_sdk/isteamremotestorage.h
+    dependencies/all/steam_sdk/isteamscreenshots.h
+    dependencies/all/steam_sdk/isteamugc.h
+    dependencies/all/steam_sdk/isteamuser.h
+    dependencies/all/steam_sdk/isteamuserstats.h
+    dependencies/all/steam_sdk/isteamutils.h
+    dependencies/all/steam_sdk/isteamvideo.h
+    dependencies/all/steam_sdk/luautils.h
+    dependencies/all/steam_sdk/matchmakingtypes.h
+    dependencies/all/steam_sdk/steam_api.h
+    dependencies/all/steam_sdk/steam_api_flat.h
+    dependencies/all/steam_sdk/steam_api_internal.h
+    dependencies/all/steam_sdk/steam_gameserver.h
+    dependencies/all/steam_sdk/steamclientpublic.h
+    dependencies/all/steam_sdk/steamencryptedappticket.h
+    dependencies/all/steam_sdk/steamhttpenums.h
+    dependencies/all/steam_sdk/steamps3params.h
+    dependencies/all/steam_sdk/steamtypes.h
+    dependencies/all/steam_sdk/steamuniverse.h
+    dependencies/all/steam_sdk/steamworks.h
 
 )
 
@@ -174,7 +174,7 @@ target_include_directories(RetroEngine PRIVATE
     dependencies/all/
     dependencies/all/tinyxml2/
     dependencies/all/iniparser/
-	dependencies/all/steam_sdk/
+    dependencies/all/steam_sdk/
 )
 
 if(DEFINED DEP_PATH)
@@ -191,8 +191,8 @@ target_compile_definitions(RetroEngine PRIVATE
     RETRO_REVISION=${RETRO_REVISION}
     RSDK_USE_${RETRO_SUBSYSTEM}=1
     STEAM_API_NODLL=${STEAM_API_NODLL}
-	ORIGINS_COLLISON=${ORIGINS_COLLISION}
-	EOS_USE_DLLEXPORT=${EOS_USE_DLLEXPORT}
+    ORIGINS_COLLISION=${ORIGINS_COLLISION}
+    EOS_USE_DLLEXPORT=${EOS_USE_DLLEXPORT}
     RETRO_USE_MOD_LOADER=$<BOOL:${RETRO_MOD_LOADER}>
     RETRO_MOD_LOADER_VER=${RETRO_MOD_LOADER_VER}
 

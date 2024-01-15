@@ -218,7 +218,7 @@ namespace RSDK
             bool speedChanged = streamSpeed != newSpeed;
             if (speedChanged)
             {
-                PrintLog(PRINT_NORMAL, "  Speed change %f -> %f", streamSpeed, newSpeed);
+                PrintLog(PRINT_POPUP, "  Speed change %f -> %f", streamSpeed, newSpeed);
                 float ratio = streamSpeed / newSpeed;
                 *startPos        = GetChannelPos(*slot) * ratio;
                 streamSpeed      = newSpeed;
@@ -293,7 +293,7 @@ namespace RSDK
                 if (usedShields == 0b111)
                     UnlockAchievement(ID_12_SONIC3K_GET_ALL_BARRIERS);
                 break;
-            case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_POPUP, "NOTIFY: StatsParam2() -> %d", param1); break;
+            case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_NORMAL, "NOTIFY: StatsParam2() -> %d", param1); break;
             case NOTIFY_CHARACTER_SELECT:    PrintLog(PRINT_POPUP, "NOTIFY: CharacterSelect() -> %d", param1); break;
             case NOTIFY_SPECIAL_RETRY:
                 if (globalVars->useCoins && !param1 && globalVars->coinCount)
@@ -370,9 +370,9 @@ namespace RSDK
         AddLoopReplacement("Stage/Airship.wav"      , 179497, 0, false);
         AddLoopReplacement("Stage/Airflow.wav"      , 82292 , 0, false);
         AddLoopReplacement("Stage/Drill.wav"        , 13611 , 0, false);
-		AddLoopReplacement("Stage/Drill.wav"        , 43643 , 0, false); // MGZ2 Boss drill loop and LBZ1 falling building... wtf
+        AddLoopReplacement("Stage/Drill.wav"        , 43643 , 0, false); // MGZ2 Boss drill loop and LBZ1 falling building... wtf
         AddLoopReplacement("Stage/Hover.wav"        , 67735 , 0, false);
-		AddLoopReplacement("Stage/TakeOff.wav"      , 33159 , 0, false); // LBZ2 Death Egg takeoff
+        AddLoopReplacement("Stage/TakeOff.wav"      , 33159 , 0, false); // LBZ2 Death Egg takeoff
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0, false);
         AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
         AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);
