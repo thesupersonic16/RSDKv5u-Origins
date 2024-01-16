@@ -346,7 +346,7 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
         }
     }
     else {
-        if (otherIY + otherHitbox->top < thisIY + thisHitbox->bottom && thisIX + thisHitbox->left < otherIX + otherHitbox->right) {
+        if (otherIY + otherHitbox->top <= thisIY + thisHitbox->bottom && thisIX + thisHitbox->left < otherIX + otherHitbox->right) {
             if (otherIX + otherHitbox->left < thisIX + thisHitbox->right) {
                 collisionSideV = C_BOTTOM;
                 collideY       = thisEntity->position.y + TO_FIXED(thisHitbox->bottom - otherHitbox->top);

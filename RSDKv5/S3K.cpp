@@ -161,7 +161,7 @@ namespace RSDK
 
     bool32 OnStreamPlay(char **filename, uint32* slot, uint32* startPos, uint32* loopPoint, int32* speed)
     {
-        PrintLog(PRINT_NORMAL, "Playing Steam \"%s\" with a loop point of %d and begins on sample %d", *filename, *loopPoint, *startPos);
+        PrintLog(PRINT_NORMAL, "Playing Stream \"%s\" with a loop point of %d and begins on sample %d", *filename, *loopPoint, *startPos);
         
         // Replace loop point
         RETRO_HASH_MD5(hash);
@@ -220,8 +220,9 @@ namespace RSDK
             {
                 PrintLog(PRINT_POPUP, "  Speed change %f -> %f", streamSpeed, newSpeed);
                 float ratio = streamSpeed / newSpeed;
-                *startPos        = GetChannelPos(*slot) * ratio;
-                streamSpeed      = newSpeed;
+                *startPos   = GetChannelPos(*slot) * ratio;
+                *loopPoint  = *loopPoint * (1.0f / newSpeed);
+                streamSpeed = newSpeed;
             }
         }
         isFast = false;
@@ -374,8 +375,11 @@ namespace RSDK
         AddLoopReplacement("Stage/Hover.wav"        , 67735 , 0, false);
         AddLoopReplacement("Stage/TakeOff.wav"      , 33159 , 0, false); // LBZ2 Death Egg takeoff
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0, false);
-        AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
-        AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);
+        //AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
+		
+        AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);	
+        AddLoopReplacement("Stage/Lava.wav"         , 81870 , 0, false); // Lava sound in LRZ?
+        AddLoopReplacement("3K_DEZ/Engine.wav"      , 72263 , 12903, false);
 
         // Music
         AddLoopReplacement("3K/AngelIsland1.ogg"  , 1     , 161209, true);
