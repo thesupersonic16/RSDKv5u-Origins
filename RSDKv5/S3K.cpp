@@ -211,6 +211,11 @@ namespace RSDK
             }
         }
 
+        if (!isFast)
+        {
+            streamSpeed = 1.0f;
+        }
+
         ChannelInfo *channel = &channels[*slot];
         if (isTransition)
         {
