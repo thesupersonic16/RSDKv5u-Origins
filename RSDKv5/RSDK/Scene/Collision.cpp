@@ -535,7 +535,7 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
     int32 otherMoveY = FROM_FIXED(otherEntity->position.y - otherEntity->velocity.y);
 
 #if RETRO_REV0U
-    if (otherEntity->tileCollisions != TILECOLLISION_DOWN) {
+    if (otherEntity->tileCollisions != TILECOLLISION_DOWN) {	
         if (otherMoveY - otherHitbox->bottom >= thisIY + -thisHitbox->bottom
             && otherIY - otherHitbox->bottom <= thisIY + -thisHitbox->top
             && thisIX + thisHitbox->left < otherIX + otherHitbox->right
@@ -555,9 +555,6 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
             }
 
             collided = true;
-
-            thisHitbox->top    = -thisHitbox->bottom;
-            thisHitbox->bottom = -thisHitbox->top;
         }
     }
     else {
