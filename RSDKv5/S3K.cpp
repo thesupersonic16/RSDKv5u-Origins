@@ -211,7 +211,7 @@ namespace RSDK
             }
         }
 
-        if (!isFast)
+        if (!isFast && !isTransition)
         {
             streamSpeed = 1.0f;
         }
@@ -223,7 +223,7 @@ namespace RSDK
             bool speedChanged = streamSpeed != newSpeed;
             if (speedChanged)
             {
-                PrintLog(PRINT_POPUP, "  Speed change %f -> %f", streamSpeed, newSpeed);
+                PrintLog(PRINT_NORMAL, "  Speed change %f -> %f", streamSpeed, newSpeed);
                 float ratio = streamSpeed / newSpeed;
                 *startPos   = GetChannelPos(*slot) * ratio;
                 *loopPoint  = *loopPoint * (1.0f / newSpeed);
