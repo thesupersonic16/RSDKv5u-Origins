@@ -289,22 +289,25 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
 
     int32 collideX = otherEntity->position.x;
     int32 collideY = otherEntity->position.y;
+    int32 store;
 
     if ((thisEntity->direction & FLIP_X) == FLIP_X) {
-        int32 store       = -thisHitbox->left;
+        store             = -thisHitbox->left;
         thisHitbox->left  = -thisHitbox->right;
         thisHitbox->right = store;
-
+    }
+    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
         store              = -otherHitbox->left;
         otherHitbox->left  = -otherHitbox->right;
         otherHitbox->right = store;
     }
 
     if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
-        int32 store        = -thisHitbox->top;
+        store              = -thisHitbox->top;
         thisHitbox->top    = -thisHitbox->bottom;
         thisHitbox->bottom = store;
-
+    }
+    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
         store               = -otherHitbox->top;
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
@@ -358,20 +361,22 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
     otherHitbox->right++;
 
     if ((thisEntity->direction & FLIP_X) == FLIP_X) {
-        int32 store       = -thisHitbox->left;
+        store             = -thisHitbox->left;
         thisHitbox->left  = -thisHitbox->right;
         thisHitbox->right = store;
-
+    }
+    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
         store              = -otherHitbox->left;
         otherHitbox->left  = -otherHitbox->right;
         otherHitbox->right = store;
     }
 
     if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
-        int32 store        = -thisHitbox->top;
+        store              = -thisHitbox->top;
         thisHitbox->top    = -thisHitbox->bottom;
         thisHitbox->bottom = store;
-
+    }
+    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
         store               = -otherHitbox->top;
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
