@@ -99,7 +99,7 @@ namespace RSDK
             AddViewableVariable("Use Coins", &globalVars->useCoins, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
 			AddViewableVariable("Player Type", &globalVars->playerSpriteStyle, VIEWVAR_INT8, 0, 6);
-			AddViewableVariable("Game Type", &globalVars->gameSpriteStyle, VIEWVAR_INT8, 0, 6);
+            AddViewableVariable("Game Type", &globalVars->gameSpriteStyle, VIEWVAR_INT8, 0, 6);
             AddViewableVariable("Music Type", &globalVars->ostStyle, VIEWVAR_INT8, 0, 6);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
