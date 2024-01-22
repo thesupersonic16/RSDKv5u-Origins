@@ -1013,6 +1013,11 @@ void RSDK::LoadXMLStages(const tinyxml2::XMLElement *gameElement)
             sprintf_s(scene->folder, sizeof(scene->folder), "%s", stgFolder);
             sprintf_s(scene->id, sizeof(scene->id), "%s", stgID);
 
+#if RETRO_REV02
+            scene->filter = stgFilter;
+            if (scene->filter == 0x00)
+                scene->filter = 0xFF;
+#endif
             list->sceneCount++;
             list->sceneOffsetEnd++;
             for (int32 l = listID + 1; l < listCategory.size(); ++l) listCategory[l].sceneOffsetStart++;
