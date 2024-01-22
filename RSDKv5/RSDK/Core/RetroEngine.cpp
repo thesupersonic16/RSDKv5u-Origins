@@ -1105,6 +1105,9 @@ void RSDK::LoadGameConfig()
             strcpy(scene->name, "_RSDK_SCENE");
             strcpy(scene->folder, currentSceneFolder);
             strcpy(scene->id, currentSceneID);
+#if RETRO_REV02
+            scene->filter = sceneInfo.filter;
+#endif
             GEN_HASH_MD5(scene->name, scene->hash);
 
             // Override existing values
@@ -1154,7 +1157,11 @@ void RSDK::LoadGameConfig()
                 ReadString(&info, scene->folder);
                 ReadString(&info, scene->id);
 
-                ReadInt8(&info);
+#if RETRO_REV02
+                scene->filter = ReadInt8(&info);
+                if (scene->filter == 0x00)
+                    scene->filter = 0xFF;
+#endif
             }
             category->sceneOffsetEnd = category->sceneOffsetStart + category->sceneCount;
             sceneID += category->sceneCount;
