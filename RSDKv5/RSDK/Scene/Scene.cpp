@@ -1106,24 +1106,27 @@ void RSDK::ProcessParallax(TileLayer *layer)
 
         case LAYER_VSCROLL: {
             for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
-                scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
+                scrollInfo->tilePos = scrollInfo->scrollPos + ((currentScreen->position.y * scrollInfo->parallaxFactor) << 8);
                 scrollInfo->tilePos = TO_FIXED(FROM_FIXED(scrollInfo->tilePos) % pixelHeight);
 
                 ++scrollInfo;
             }
 
-            int16 scrollPos =
+            uint16 scrollPos =
                 FROM_FIXED((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000)) % pixelWidth;
-            if (scrollPos < 0)
-                scrollPos += pixelWidth;
  
             uint8 *lineScrollPtr = &layer->lineScroll[scrollPos];
 
             // Above water
+            int32 *deformationData = &layer->deformationData[(scrollPos + layer->deformationOffset) & 0x1FF];
             for (int32 i = 0; i < currentScreen->size.x; ++i) {
-                scanline->position.x = TO_FIXED(scrollPos++);
                 scanline->position.y = layer->scrollInfo[*lineScrollPtr].tilePos;
+                if (layer->scrollInfo[*lineScrollPtr].deform)
+                    scanline->position.y += TO_FIXED(*deformationData);
 
+                scanline->position.x = TO_FIXED(scrollPos++);
+
+                deformationData++;
                 if (scrollPos == pixelWidth) {
                     lineScrollPtr = layer->lineScroll;
                     scrollPos     = 0;
