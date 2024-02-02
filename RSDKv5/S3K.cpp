@@ -91,19 +91,23 @@ namespace RSDK
             UnlockAchievement(ID_04_SONIC3K_WATCH_OPENING);
         }
 
-        flipFramebuffer = isMirrorMode && sceneInfo.activeCategory != 0;
+        flipFramebuffer = globalVars && globalVars->mirrorMode && sceneInfo.activeCategory != 0;
 
         if (globalVars) {
-            AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 8);
+			AddViewableVariable("GameMode Type", &globalVars->gameMode, VIEWVAR_UINT8, 0, 6);
+			AddViewableVariable("playerID Type", &globalVars->playerID, VIEWVAR_UINT8, 0, 32);
+            AddViewableVariable("Play Mode", &globalVars->playMode, VIEWVAR_UINT8, 0, 6);
             AddViewableVariable("Disable Lives", &globalVars->disableLives, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Use Coins", &globalVars->useCoins, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Coin Count", &globalVars->coinCount, VIEWVAR_INT16, 0, 999);
 			AddViewableVariable("Player Type", &globalVars->playerSpriteStyle, VIEWVAR_INT8, 0, 6);
             AddViewableVariable("Game Type", &globalVars->gameSpriteStyle, VIEWVAR_INT8, 0, 6);
             AddViewableVariable("Music Type", &globalVars->ostStyle, VIEWVAR_INT8, 0, 6);
+			AddViewableVariable("Starpost Type", &globalVars->starpostStyle, VIEWVAR_INT8, 0, 6);
+			AddViewableVariable("Mirror Mode", &globalVars->mirrorMode, VIEWVAR_BOOL, false, true);
+			AddViewableVariable("Mania Behavior", &globalVars->useManiaBehavior, VIEWVAR_BOOL, false, true);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
-        AddViewableVariable("Mirror Mode", &isMirrorMode, VIEWVAR_BOOL, false, true);
         AddViewableVariable("Has Seen Intro", &originsData.hasSeenIntro, VIEWVAR_BOOL, false, true);
     }
     
