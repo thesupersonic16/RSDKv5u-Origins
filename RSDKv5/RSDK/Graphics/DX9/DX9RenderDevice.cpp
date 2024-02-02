@@ -43,6 +43,8 @@ HINSTANCE RenderDevice::hInstance;
 HINSTANCE RenderDevice::hPrevInstance;
 INT RenderDevice::nShowCmd;
 
+HMODULE DllHandle = NULL;
+
 bool RenderDevice::Init()
 {
 #if _UNICODE
@@ -55,7 +57,9 @@ bool RenderDevice::Init()
     LPCSTR gameTitle = str.c_str();
 #endif
 
-    HMODULE handle = GetModuleHandle(NULL);
+    HMODULE handle = DllHandle;
+    if (!handle)
+        handle = GetModuleHandle(NULL);
 
     WNDCLASS wndClass      = {};
     wndClass.style         = CS_VREDRAW | CS_HREDRAW;
