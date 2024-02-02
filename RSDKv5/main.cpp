@@ -297,7 +297,7 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
 
     // Force the console for now
     auto argc = 1;
-    auto argv = new const char*[1]{ "console=true" };
+    auto argv = new const char*[1]{ "console=false" };
     
     RSDK::InitCoreAPI();
 

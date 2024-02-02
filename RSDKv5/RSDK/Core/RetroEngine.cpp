@@ -30,6 +30,10 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 {
     ParseArguments(argc, argv);
 
+    // Enable console if one has already been allocated
+    if (GetConsoleWindow())
+        engine.consoleEnabled = true;
+
     if (engine.consoleEnabled)
         InitConsole();
     RenderDevice::isRunning = false;
