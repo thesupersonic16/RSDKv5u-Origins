@@ -319,7 +319,7 @@ namespace RSDK
             case NOTIFY_TOUCH_CHECKPOINT:    PrintLog(PRINT_NORMAL, "NOTIFY: TouchCheckpoint() -> %d", param1); break;
             case NOTIFY_ACT_FINISH:          PrintLog(PRINT_NORMAL, "NOTIFY: ActFinish() -> %d", param1); break;
             case NOTIFY_1P_VS_SELECT:        PrintLog(PRINT_POPUP, "NOTIFY: 1PVSSelect() -> %d", param1); break;
-            case NOTIFY_CONTROLLER_SUPPORT:  PrintLog(PRINT_POPUP, "NOTIFY: ControllerSupport() -> %d", param1); break;
+            case NOTIFY_CONTROLLER_SUPPORT:  PrintLog(PRINT_NORMAL, "NOTIFY: ControllerSupport() -> %d", param1); break;
             case NOTIFY_STAGE_RETRY:         PrintLog(PRINT_POPUP, "NOTIFY: StageRetry() -> %d", param1); break;
             case NOTIFY_SOUND_TRACK:         PrintLog(PRINT_POPUP, "NOTIFY: SoundTrack() -> %d", param1); break;
             case NOTIFY_GOOD_ENDING:         PrintLog(PRINT_POPUP, "NOTIFY: GoodEnding() -> %d", param1); break;
