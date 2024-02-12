@@ -326,6 +326,10 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
     // Nuke message box
     WRITE_MEMORY(SigNukeSystemReq(), (char)0xEB);
 
+    // Nuke Origins ProcessEngine
+    WRITE_MEMORY(((char *)ORIGINS_PROCESSENGINE_ADDR + 0x0A), 0x48, 0x83, 0xC4, 0x28, 0xC3);
+    WRITE_MEMORY(((char *)ORIGINS_RUNCORE_ADDR + 0x05), 0xC3);
+
     GetCurrentDirectoryA(MAX_PATH, modPath);
 
     // Find epic token
