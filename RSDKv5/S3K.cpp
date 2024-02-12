@@ -64,6 +64,8 @@ namespace RSDK
     void OnGlobalsLoaded(int32* globals)
     { 
         globalVars = (GlobalS3KVariables *)globalVarsPtr;
+		PrintLog(PRINT_NORMAL, "%llx\n", globalVars);
+		//printf("%llx\n", globalVars);
 
         if (globalVars) {
             globalVars->disableLives = originsData.disableLives;
@@ -106,6 +108,9 @@ namespace RSDK
             AddViewableVariable("Starpost Type", &globalVars->starpostStyle, VIEWVAR_INT8, 0, 6);
             AddViewableVariable("Mirror Mode", &globalVars->mirrorMode, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Mania Behavior", &globalVars->useManiaBehavior, VIEWVAR_BOOL, false, true);
+			AddViewableVariable("Sound Test", &globalVars->soundTestEnabled, VIEWVAR_BOOL, false, true);
+			AddViewableVariable("Secrets", &globalVars->secrets, VIEWVAR_INT32, 0, 9999);
+			AddViewableVariable("Medal Mods", &globalVars->medalMods, VIEWVAR_INT32, 0, 9999);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
         AddViewableVariable("Has Seen Intro", &originsData.hasSeenIntro, VIEWVAR_BOOL, false, true);
