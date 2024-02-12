@@ -1,6 +1,9 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#define ORIGINS_PROCESSENGINE_ADDR (0x140102840)
+#define ORIGINS_RUNCORE_ADDR       (0x14031CD90)
+
 #if !RETRO_STANDALONE
 #ifdef _MSC_VER
 #define DLLExport __declspec(dllexport)
