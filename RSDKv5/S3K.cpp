@@ -69,8 +69,8 @@ namespace RSDK
     void OnGlobalsLoaded(int32* globals)
     { 
         globalVars = (GlobalS3KVariables *)globalVarsPtr;
-		PrintLog(PRINT_NORMAL, "%llx\n", globalVars);
-		//printf("%llx\n", globalVars);
+        //PrintLog(PRINT_NORMAL, "%llx\n", globalVars);
+        //printf("%llx\n", globalVars);
 
         if (globalVars) {
             globalVars->disableLives = originsData.disableLives;
@@ -118,9 +118,9 @@ namespace RSDK
             AddViewableVariable("Starpost Type", &globalVars->starpostStyle, VIEWVAR_INT8, 0, 6);
             AddViewableVariable("Mirror Mode", &globalVars->mirrorMode, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Mania Behavior", &globalVars->useManiaBehavior, VIEWVAR_BOOL, false, true);
-			AddViewableVariable("Sound Test", &globalVars->soundTestEnabled, VIEWVAR_BOOL, false, true);
-			AddViewableVariable("Secrets", &globalVars->secrets, VIEWVAR_INT32, 0, 9999);
-			AddViewableVariable("Medal Mods", &globalVars->medalMods, VIEWVAR_INT32, 0, 9999);
+            AddViewableVariable("Sound Test", &globalVars->soundTestEnabled, VIEWVAR_BOOL, false, true);
+            AddViewableVariable("Secrets", &globalVars->secrets, VIEWVAR_INT32, 0, 9999);
+            AddViewableVariable("Medal Mods", &globalVars->medalMods, VIEWVAR_INT32, 0, 9999);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
         AddViewableVariable("Has Seen Intro", &originsData.hasSeenIntro, VIEWVAR_BOOL, false, true);
@@ -402,7 +402,7 @@ namespace RSDK
         AddLoopReplacement("Stage/TakeOff.wav"      , 33159 , 0, false); // LBZ2 Death Egg takeoff
         AddLoopReplacement("3K_SSZ/DeathEggRise.wav", 116772, 0, false);
         //AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
-		
+        
         AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);	
         AddLoopReplacement("Stage/Lava.wav"         , 81870 , 0, false); // Lava sound in LRZ?
         AddLoopReplacement("3K_DEZ/Engine.wav"      , 72263 , 12903, false);

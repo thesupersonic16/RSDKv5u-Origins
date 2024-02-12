@@ -117,11 +117,11 @@ namespace RSDK
         uint8 gap8[0xC2CAC];
         MedalMods medalMods;
         uint8 gapC2CB8[0x400734];
-		bool32 vapeMode;
-		int32 secrets;
-		int32 field_447BF4;
-		bool32 soundTestEnabled;
-		bool32 superMusicEnabled;
+        bool32 vapeMode;
+        int32 secrets;
+        int32 field_447BF4;
+        bool32 soundTestEnabled;
+        bool32 superMusicEnabled;
         GameTypes playerSpriteStyle;
         GameTypes gameSpriteStyle;
         GameTypes ostStyle;
