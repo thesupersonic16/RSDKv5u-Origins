@@ -3,7 +3,7 @@ namespace Legacy
 {
 
 #define LEGACY_SURFACE_COUNT (24)
-#define LEGACY_GFXDATA_SIZE  (0x800 * 0x800)
+#define LEGACY_GFXDATA_SIZE  (0x1000 * 0x1000)
 
 #define LEGACY_DRAWLAYER_COUNT (8)
 

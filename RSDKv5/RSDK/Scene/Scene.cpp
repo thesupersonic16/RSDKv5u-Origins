@@ -70,6 +70,7 @@ void RSDK::LoadSceneFolder()
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
         PrintLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
                  sceneInfo.listData[sceneInfo.listPos].filter);
+
 #if RETRO_USE_MOD_LOADER
         // reload object hooks
         for (int32 h = 0; h < (int32)objectHookList.size(); ++h) {

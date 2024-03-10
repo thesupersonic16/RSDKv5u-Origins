@@ -289,7 +289,6 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
     }
 #endif
 
-
 #if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_ANDROID
     if (addPath) {
         char pathBuf[0x100];
@@ -299,7 +298,7 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 #else
     (void)addPath;
 #endif // ! RETRO_PLATFORM
-#endif 
+#endif // ! RETRO_MOD_LOADER
 
 #if !RETRO_USE_ORIGNAL_CODE
     // somewhat hacky that also pleases the mod gods
