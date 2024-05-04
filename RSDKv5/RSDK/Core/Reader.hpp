@@ -35,7 +35,7 @@ namespace RSDK
 #endif
 
 #define DATAFILE_COUNT (0x1000)
-#define DATAPACK_COUNT (4)
+#define DATAPACK_COUNT (8)
 
 enum Scopes {
     SCOPE_NONE,

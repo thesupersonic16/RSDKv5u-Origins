@@ -45,6 +45,8 @@ namespace RSDK
 
         // Load data pack
         char packPath[MAX_PATH];
+        sprintf_s(packPath, "%s\\Update.rsdk", modPath);
+        LoadDataPack(packPath, 0, false);
         sprintf_s(packPath, "%s\\Base.rsdk", modPath);
         LoadDataPack(packPath, 0, false);
 
