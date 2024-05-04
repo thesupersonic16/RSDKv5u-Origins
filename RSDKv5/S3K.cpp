@@ -100,7 +100,7 @@ namespace RSDK
             originsData.hasSeenIntro = true;
             PlayStream("Intro.ogg", 0, 0, 0, false);
             LoadVideo("Intro.ogv", 0, VideoSkipCB);
-            UnlockAchievement(ID_04_SONIC3K_WATCH_OPENING);
+            UpdateStatsInt32("WATCH_OPENING2", 1);
         }
 
         flipFramebuffer = globalVars && globalVars->mirrorMode && sceneInfo.activeCategory != 0;
@@ -129,7 +129,7 @@ namespace RSDK
     // Runs on game finish state which is after the movie is played
     void OnGameFinish()
     {
-        UnlockAchievement(ID_34_SONIC3K_CLEAR_ALL_STAGE);
+        UpdateStatsInt32("CLEAR_ALL_STAGE2", 1);
 
         // Restart game
         sceneInfo.activeCategory = 0;
@@ -257,6 +257,7 @@ namespace RSDK
 
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3)
     {
+        int32 kinds = 0;
         switch (callback) {
             case NOTIFY_DEATH_EVENT:         PrintLog(PRINT_NORMAL, "NOTIFY: DeathEvent() -> %d", param1); break;
             case NOTIFY_TOUCH_SIGNPOST:      PrintLog(PRINT_POPUP, "NOTIFY: TouchSignPost() -> %d", param1); break;
@@ -277,29 +278,24 @@ namespace RSDK
             case NOTIFY_KILL_BOSS:           PrintLog(PRINT_NORMAL, "NOTIFY: KillBoss() -> %d", param1); break;
             case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_NORMAL, "NOTIFY: TouchEmerald() -> %d", param1); break;
             case NOTIFY_STATS_ENEMY:
+                    PrintLog(PRINT_POPUP, "NOTIFY: NOTIFY_STATS_ENEMY -> %d, %d, %d", param1, param2, param3);
                 originsData.totalEnemies += param1;
-                if (originsData.totalEnemies >= 50)
-                    UnlockAchievement(ID_15_NOVICE_HERO);
-                if (originsData.totalEnemies >= 200)
-                    UnlockAchievement(ID_29_HERO_FOR_ALL);
-                if (param3 >= 30)
-                    UnlockAchievement(ID_14_DEFEAT_ENEMY_BY_SPIN_DASH);
-                if (param3 >= 10)
-                    UnlockAchievement(ID_11_SONIC3K_DEFEAT_RHINOBOT);
+                UpdateStatsInt32("DEFEAT_ENEMY", originsData.totalEnemies);
+                // TODO: Check if these are totals
+                UpdateStatsInt32("DEFEAT_ENEMY_BY_SPIN_DASH", param2);
+                UpdateStatsInt32("DEFEAT_RHINOBOT", param3);
                 break;
             case NOTIFY_STATS_CHARA_ACTION:
                 if (param1)
-                    UnlockAchievement(ID_30_TRANSFORM_SUPER_SONIC);
+                    UpdateStatsInt32("TRANSFORM_SUPER_SONIC_COUNT", 1);
                 if (param2)
-                    UnlockAchievement(ID_19_TAILS_FLYING);
+                    UpdateStatsInt32("FLYING_COUNT", 1);
                 if (param3)
                     PrintLog(PRINT_POPUP, "NOTIFY: StatsCharaAction() -> %d, %d, %d", param1, param2, param3);
                 break;
             case NOTIFY_STATS_RING:
                 originsData.totalRings += param1;
-
-                if (originsData.totalRings >= 1000)
-                    UnlockAchievement(ID_13_RING_COLLECTOR);
+                UpdateStatsInt32("RING_COUNT", originsData.totalRings);
                 break;
             case NOTIFY_STATS_MOVIE:
                 if (param1)
@@ -317,8 +313,10 @@ namespace RSDK
                 if (param3)
                     usedShields |= (1 << 2);
 
-                if (usedShields == 0b111)
-                    UnlockAchievement(ID_12_SONIC3K_GET_ALL_BARRIERS);
+                kinds += (usedShields & 0b001) ? 1 : 0;
+                kinds += (usedShields & 0b010) ? 1 : 0;
+                kinds += (usedShields & 0b100) ? 1 : 0;
+                UpdateStatsInt32("GET_BARRIER_KIND", kinds);
                 break;
             case NOTIFY_STATS_PARAM_2:       PrintLog(PRINT_NORMAL, "NOTIFY: StatsParam2() -> %d", param1); break;
             case NOTIFY_CHARACTER_SELECT:    PrintLog(PRINT_POPUP, "NOTIFY: CharacterSelect() -> %d", param1); break;
@@ -352,7 +350,7 @@ namespace RSDK
             case NOTIFY_STATS_SAVE_FUTURE:   PrintLog(PRINT_POPUP, "NOTIFY: StatsSaveFuture() -> %d", param1); break;
             case NOTIFY_STATS_CHARA_ACTION2: 
                 if (param1)
-                    UnlockAchievement(ID_18_KNUCKLES_GLIDING);
+                    UpdateStatsInt32("GLIDING_COUNT", 1);
                 if (param2)
                     PrintLog(PRINT_NORMAL, "NOTIFY: StatsCharaAction2() -> %d, %d, %d", param1, param2, param3); // Amy Hammer
                 if (param3)
@@ -461,6 +459,15 @@ namespace RSDK
         AddLoopReplacement("3K/TheDoomsday.ogg"   , 605488, 722165, true);
     }
     
+    void UpdateStatsInt32(const char* name, int progress)
+    {
+        SKU::StatInfo info;
+        info.name = name;
+        *(int*)info.data = progress;
+
+        SKU::TryTrackStat(&info);
+    }
+
     void RegisterAchievementID(const char *name)
     {
         achievementIDs[achievementIDCount].identifier = name;
@@ -587,6 +594,7 @@ namespace RSDK
         ADD_PUBLIC_FUNC(OnCallbackNotify);
         ADD_PUBLIC_FUNC(AddLoopReplacement);
         ADD_PUBLIC_FUNC(RegisterLoopPoints);
+        ADD_PUBLIC_FUNC(UpdateStatsInt32);
         ADD_PUBLIC_FUNC(UnlockAchievement);
         ADD_PUBLIC_FUNC(RegisterAchievementID);
         ADD_PUBLIC_FUNC(RegisterAchievements);

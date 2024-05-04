@@ -17,6 +17,7 @@ namespace SKU
 
 // Steam API
 #if RETRO_USERCORE_STEAM
+#include "steam_api.h"
 #include "RSDK/User/Steam/SteamStats.cpp"
 #endif
 
