@@ -119,8 +119,8 @@ namespace RSDK
             AddViewableVariable("Mirror Mode", &globalVars->mirrorMode, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Mania Behavior", &globalVars->useManiaBehavior, VIEWVAR_BOOL, false, true);
             AddViewableVariable("Sound Test", &globalVars->soundTestEnabled, VIEWVAR_BOOL, false, true);
-            AddViewableVariable("Secrets", &globalVars->secrets, VIEWVAR_INT32, 0, 9999);
-            AddViewableVariable("Medal Mods", &globalVars->medalMods, VIEWVAR_INT32, 0, 9999);
+            AddViewableVariable("Secrets", &globalVars->secrets, VIEWVAR_INT16, 0, 999);
+            AddViewableVariable("Medal Mods", &globalVars->medalMods, VIEWVAR_INT16, 0, 999);
         }
         AddViewableVariable("Use Path Tracer", usePathTracer, VIEWVAR_BOOL, false, true);
         AddViewableVariable("Has Seen Intro", &originsData.hasSeenIntro, VIEWVAR_BOOL, false, true);
