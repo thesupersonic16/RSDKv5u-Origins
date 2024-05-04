@@ -278,7 +278,6 @@ namespace RSDK
             case NOTIFY_KILL_BOSS:           PrintLog(PRINT_NORMAL, "NOTIFY: KillBoss() -> %d", param1); break;
             case NOTIFY_TOUCH_EMERALD:       PrintLog(PRINT_NORMAL, "NOTIFY: TouchEmerald() -> %d", param1); break;
             case NOTIFY_STATS_ENEMY:
-                    PrintLog(PRINT_POPUP, "NOTIFY: NOTIFY_STATS_ENEMY -> %d, %d, %d", param1, param2, param3);
                 originsData.totalEnemies += param1;
                 UpdateStatsInt32("DEFEAT_ENEMY", originsData.totalEnemies);
                 // TODO: Check if these are totals
