@@ -572,7 +572,7 @@ void RSDK::LoadSettingsINI()
         }
 
         SaveSettingsINI(true);
-        engine.devMenu = LoadDataPack(defaultDataPack, 0, useBuffer);
+        LoadDataPack(defaultDataPack, 0, useBuffer);
     }
 }
 
