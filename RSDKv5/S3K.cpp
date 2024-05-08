@@ -4,11 +4,6 @@
 #include "Helpers.h"
 #include "SigScan.h"
 
-// Too lazy to work around these
-#define ORIGINS_GLOBALS_ADDR       (0x143DB1B80)
-#define ORIGINS_PROCESSENGINE_ADDR (0x140102840)
-#define ORIGINS_RUNCORE_ADDR       (0x14031CD90)
-
 #if RETRO_USE_MOD_LOADER
 #define ADD_PUBLIC_FUNC(func) AddPublicFunction(#func, (void *)(func))
 #endif
@@ -85,9 +80,9 @@ namespace RSDK
     void OnFrameInit()
     {
         // Call Origins ProcessEngine for ML callbacks
-        ((void(__fastcall *)())(ORIGINS_PROCESSENGINE_ADDR))();
+        ((void(__fastcall *)())((char *)SigProcessEngine_0A() - 0x0A))();
         // Call Origins RunCore for ML callbacks
-        ((void(__fastcall *)())(ORIGINS_RUNCORE_ADDR))();
+        ((void(__fastcall *)())((char *)SigRunCore_0A() - 0x0A))();
 
         // Check for Plus DLC
         if (globalVars)

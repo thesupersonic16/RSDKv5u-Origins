@@ -9,3 +9,9 @@ extern void *SigNukeSystemReq();
 extern void *SigEngine_LoadFile();
 extern void *SigFindFloorPosition();
 extern void *SigStateMachineRun();
+
+extern void *SigProcessEngine_0A();
+extern void *SigRunCore_0A();
+
+
+extern void *SigAVXPatch();
