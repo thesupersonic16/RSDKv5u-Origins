@@ -554,23 +554,6 @@ namespace RSDK
         savedata->hasSeenIntro    = false;
     }
 
-    void UploadCollisionData()
-    {
-        // Sonic Origins 2.0.2 addresses
-        *((Entity **)(0x143363150)) = collisionEntity;
-        *((uint32 *)0x14336316C)    = collisionTolerance;
-        memcpy((void *)0x143D97160, tileLayers, sizeof(tileLayers));
-        memcpy((void *)0x1432D3150, collisionMasks, sizeof(collisionMasks));
-        memcpy((void *)0x143353150, tileInfo, sizeof(tileInfo));
-    }
-
-    void RedirectSensorToOrigins(void* address, CollisionSensor* sensor)
-    {
-        UploadCollisionData();
-        auto sensorFunc = (void(__fastcall *)(CollisionSensor *sensor))(address);
-        sensorFunc(sensor);
-    }
-
 #if RETRO_USE_MOD_LOADER
     OriginsData *GetOriginsData() { return &originsData; }
 
