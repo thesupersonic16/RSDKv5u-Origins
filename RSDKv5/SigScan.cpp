@@ -43,6 +43,37 @@ void* sigScan(const char* signature, const char* mask)
     return nullptr;
 }
 
+void* sigScan(const char *signature, const char *mask, void *hint)
+{
+    const MODULEINFO& moduleInfo = getModuleInfo();
+    const size_t length = strlen(mask);
+
+    char* memory = (char *)hint;
+
+    size_t j;
+    for (j = 0; j < length; j++)
+        if (mask[j] != '?' && signature[j] != memory[j])
+            break;
+   
+    if (j == length)
+        return memory;
+    
+    for (size_t i = 0; i < moduleInfo.SizeOfImage; i++)
+    {
+        memory = (char*)moduleInfo.lpBaseOfDll + i;
+
+        for (j = 0; j < length; j++)
+            if (mask[j] != '?' && signature[j] != memory[j])
+                break;
+
+        if (j == length)
+            return memory;
+    }
+
+    return nullptr;
+}
+
+
 #define SIG_SCAN(x, ...) \
     void* x##Addr; \
     void* x() \

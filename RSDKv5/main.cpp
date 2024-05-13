@@ -3,6 +3,7 @@
 #include "HiteModLoader.h"
 #include "Helpers.h"
 #include "SigScan.h"
+#include "Symbols.h"
 #ifdef STEAM_API_NODLL
 #include <steam_api.h>
 #endif
@@ -358,6 +359,7 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
         }
     }
 
+    Symbols::loadScanFile("symbols.txt");
     ModLoaderData = modInfo->ModLoader;
 }
 

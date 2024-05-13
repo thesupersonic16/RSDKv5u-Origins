@@ -3,6 +3,7 @@
 #include "S3K.hpp"
 #include "Helpers.h"
 #include "SigScan.h"
+#include "Symbols.h"
 
 #if RETRO_USE_MOD_LOADER
 #define ADD_PUBLIC_FUNC(func) AddPublicFunction(#func, (void *)(func))
@@ -559,6 +560,12 @@ namespace RSDK
 
     void AddPublicFunctions()
     {
+        Symbols::parseScanFile();
+        Symbols::scanAll();
+
+        for (auto& scan : Symbols::symbols)
+            AddPublicFunction(scan.name->c_str(), scan.address);
+
         // Might aswell make everything a public function
         ADD_PUBLIC_FUNC(OnEngineInit);
         ADD_PUBLIC_FUNC(OnFrameInit);
