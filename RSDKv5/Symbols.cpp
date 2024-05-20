@@ -8,13 +8,15 @@
 #include "SigScan.h"
 #include <Psapi.h>
 
+#if RETRO_USE_MOD_LOADER
 namespace Symbols {
 
     void* scanFile = nullptr;
     std::vector<SignatureScan> symbols;
 
     // I did not write this
-    std::vector<std::string> split(const std::string& s, char delimiter) {
+    std::vector<std::string> split(const std::string& s, char delimiter)
+    {
         std::vector<std::string> tokens;
         std::string token;
         std::istringstream tokenStream(s);
@@ -63,8 +65,7 @@ namespace Symbols {
 
         FILE* handle;
         fopen_s(&handle, filePath, "r");
-        if (handle)
-        {
+        if (handle) {
             fseek(handle, 0, SEEK_END);
             int fileSize = ftell(handle);
             fseek(handle, 0, SEEK_SET);
@@ -85,8 +86,7 @@ namespace Symbols {
         // Splitting the file contents into lines
         std::istringstream dataStream((char*)scanFile);
         std::string line;
-        while (std::getline(dataStream, line))
-        {
+        while (std::getline(dataStream, line)) {
             if (line.length() == 0 || line[0] == '#')
                 continue;
 
@@ -112,8 +112,7 @@ namespace Symbols {
                     symbol.pattern[mi] = '\x00';
                     symbol.mask[mi] = '?';
                 }
-                else
-                {
+                else {
                     symbol.pattern[mi] = hexToByte(splits[1], pi);
                     symbol.mask[mi] = 'x';
                     ++pi; // skip byte
@@ -127,11 +126,12 @@ namespace Symbols {
 
     void scanAll()
     {
-        for (auto& scan : symbols)
-        {
+        for (auto& scan : symbols) {
             scan.address = sigScan(scan.pattern, scan.mask, scan.hint);
+
             if (!scan.address)
-                RSDK::PrintLog(RSDK::PRINT_ERROR, "Failed to find signature \"%s\"!", scan.name->c_str());
+                RSDK::PrintLog(RSDK::PRINT_ERROR, "Failed to find address for \"%s\"!", scan.name->c_str());
         }
     }
 }
+#endif

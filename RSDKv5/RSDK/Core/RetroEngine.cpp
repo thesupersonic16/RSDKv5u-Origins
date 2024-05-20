@@ -65,7 +65,6 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
             // No render device, throw a "QUIT" msg onto the message loop and call it a day :)
             SendQuitMsg();
         }
-        AddPublicFunctions();
 #if RETRO_PLATFORM == RETRO_ANDROID
         // wait until we have a window
         while (!RenderDevice::window) {
@@ -75,6 +74,7 @@ int32 RSDK::RunRetroEngine(int32 argc, char *argv[])
 
 #if RETRO_REV0U
         engine.version = 0;
+        AddPublicFunctions();
         InitModAPI(true); // check for versions
         engine.version = 5;
 #endif
