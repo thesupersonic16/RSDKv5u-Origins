@@ -473,6 +473,9 @@
     <ClCompile Include="..\RSDKv5\Symbols.cpp">
       <Filter>Source Files\RSDK</Filter>
     </ClCompile>
+    <ClCompile Include="..\RSDKv5\Patches.cpp">
+      <Filter>Source Files\RSDK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h">
@@ -788,6 +791,9 @@
       <Filter>Source Files\RSDK</Filter>
     </ClInclude>
     <ClInclude Include="..\RSDKv5\Symbols.h">
+      <Filter>Source Files\RSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RSDKv5\Patches.hpp">
       <Filter>Source Files\RSDK</Filter>
     </ClInclude>
   </ItemGroup>

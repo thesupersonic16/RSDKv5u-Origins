@@ -13,5 +13,6 @@ extern void *SigStateMachineRun();
 extern void *SigProcessEngine_0A();
 extern void *SigRunCore_0A();
 
-
 extern void *SigAVXPatch();
+
+extern void *SigHUD_Draw_E55();

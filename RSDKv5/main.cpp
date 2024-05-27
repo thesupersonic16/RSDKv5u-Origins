@@ -4,6 +4,7 @@
 #include "Helpers.h"
 #include "SigScan.h"
 #include "Symbols.h"
+#include "Patches.hpp"
 #ifdef STEAM_API_NODLL
 #include <steam_api.h>
 #endif
@@ -305,7 +306,7 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
     int32 exitCode = RSDK::RunRetroEngine(argc, (char**)argv);
 
     RSDK::ReleaseCoreAPI();
-
+    exit(exitCode);
     return E_FAIL;
 }
 
@@ -325,20 +326,7 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
     INSTALL_HOOK(StateMachineRun);
 #endif
 
-    // Remove Origins events while allowing HML events
-    WRITE_MEMORY(SigProcessEngine_0A(), (char)0x48, (char)0x83, (char)0xC4, (char)0x28, (char)0xC3);
-    WRITE_MEMORY(SigRunCore_0A(), (char)0xC3);
-
-    // Don't use AVX
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x00), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x08), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x20), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x28), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x40), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x48), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x60), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x68), (char)0xF3, (char)0x0F);
-    WRITE_MEMORY(((char *)SigAVXPatch() + 0x85), (char)0x66, (char)0x0F, (char)0x7E, (char)0xC0, (char)0xF3, (char)0x0F);
+    RSDK::ApplyPatches();
 
     GetCurrentDirectoryA(MAX_PATH, modPath);
 
