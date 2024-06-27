@@ -310,7 +310,7 @@ HOOK(HRESULT, __fastcall, D3D11CreateDevice, PROC_ADDRESS("d3d11.dll", "D3D11Cre
     return E_FAIL;
 }
 
-#ifdef RETRO_USE_MOD_LOADER
+#if RETRO_USE_MOD_LOADER
 HOOK(void, __fastcall, StateMachineRun, SigStateMachineRun(), void (**state)(void *), void *data)
 {
     if (*state)
@@ -322,7 +322,7 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
 {
 	SigLinkGameLogic();
     INSTALL_HOOK(D3D11CreateDevice);
-#ifdef RETRO_USE_MOD_LOADER
+#if RETRO_USE_MOD_LOADER
     INSTALL_HOOK(StateMachineRun);
 #endif
 
@@ -345,7 +345,9 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
         }
     }
 
+#if RETRO_USE_MOD_LOADER
     Symbols::loadScanFile("symbols.txt");
+#endif
     ModLoaderData = modInfo->ModLoader;
 }
 
