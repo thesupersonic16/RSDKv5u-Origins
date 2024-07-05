@@ -29,8 +29,10 @@ set(RETRO_FILES
     RSDKv5/RSDK/Core/Reader.cpp
     RSDKv5/RSDK/Core/Link.cpp
     RSDKv5/RSDK/Core/ModAPI.cpp
+    RSDKv5/Patches.cpp
     RSDKv5/S3K.cpp
     RSDKv5/SigScan.cpp
+    RSDKv5/Symbols.cpp
     RSDKv5/RSDK/Dev/Debug.cpp
     RSDKv5/RSDK/Storage/Storage.cpp
     RSDKv5/RSDK/Storage/Text.cpp
