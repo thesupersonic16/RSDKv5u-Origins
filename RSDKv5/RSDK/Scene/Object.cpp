@@ -31,6 +31,8 @@ void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityCl
                           void (*lateUpdate)(), void (*staticUpdate)(), void (*draw)(), void (*create)(void *), void (*stageLoad)(),
                           void (*editorLoad)(), void (*editorDraw)(), void (*serialize)(), void (*staticLoad)(Object *))
 {
+	//PrintLog(PRINT_NORMAL, "Object %s at %llx, with a entity size of 0x%llx and static size of 0x%llx.", name, staticVars, entityClassSize, staticClassSize);
+	//PrintLog(PRINT_NORMAL, "Object %s Update, LateUpdate, StaticUpdate, Draw, Create, StageLoad, EditorDraw, EditorLoad, serialize, and staticLoad are located at 0x%llx, 0x%llx, 0x%llx, 0x%llx, 0x%llx, 0x%llx, 0x%llx, 0x%llx, 0x%llx, 0x%llx", name, update, lateUpdate, staticUpdate, draw, create, stageLoad, editorDraw, editorLoad, serialize, staticLoad);
     return RegisterObject_STD(staticVars, name, entityClassSize, staticClassSize, update, lateUpdate, staticUpdate, draw, create, stageLoad,
                               editorLoad, editorDraw, serialize, staticLoad);
 }
@@ -80,8 +82,8 @@ void RSDK::RegisterObject(Object **staticVars, const char *name, uint32 entityCl
         classInfo->draw            = draw;
         classInfo->create          = create;
         classInfo->stageLoad       = stageLoad;
-        classInfo->editorDraw      = editorDraw;
         classInfo->editorLoad      = editorLoad;
+        classInfo->editorDraw      = editorDraw;
         classInfo->serialize       = serialize;
 #if RETRO_REV0U
         classInfo->staticLoad = staticLoad;

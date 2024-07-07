@@ -560,8 +560,6 @@ namespace RSDK
 
     void AddPublicFunctions()
     {
-        Symbols::parseScanFile();
-        Symbols::scanAll();
 
         for (auto& scan : Symbols::symbols)
             AddPublicFunction(scan.name->c_str(), scan.address);

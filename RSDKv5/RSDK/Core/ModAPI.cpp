@@ -1038,6 +1038,7 @@ void RSDK::AddModCallback_STD(int32 callbackID, ModCallbackSTD callback)
 
 void RSDK::AddPublicFunction(const char *functionName, void *functionPtr)
 {
+	//PrintLog(PRINT_NORMAL, "Added function: %s = 0x%llx", functionName, functionPtr);
     if (!currentMod)
         return gamePublicFuncs.push_back({ functionName, functionPtr });
     if (!currentMod->active)
@@ -1617,14 +1618,14 @@ void SuperInternal(RSDK::ObjectClass *super, RSDK::ModSuper callback, void *data
                 super->stageLoad();
             break;
 
-        case SUPER_EDITORDRAW:
-            if (super->editorDraw)
-                super->editorDraw();
-            break;
-
         case SUPER_EDITORLOAD:
             if (super->editorLoad)
                 super->editorLoad();
+            break;
+
+        case SUPER_EDITORDRAW:
+            if (super->editorDraw)
+                super->editorDraw();
             break;
 
         case SUPER_SERIALIZE:

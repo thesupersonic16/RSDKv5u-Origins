@@ -1397,12 +1397,12 @@ void RSDK::Legacy::DrawTintRectangle(int32 XPos, int32 YPos, int32 width, int32 
         height += YPos;
         YPos = 0;
     }
-    if (width <= 0 || height <= 0)
+    if (width < 0 || height < 0)
         return;
     int32 yOffset = GFX_LINESIZE - width;
     for (uint16 *frameBufferPtr = &currentScreen->frameBuffer[XPos + GFX_LINESIZE * YPos];; frameBufferPtr += yOffset) {
         height--;
-        if (!height)
+        if (height < 0)
             break;
         int32 w = width;
         while (w--) {
@@ -1472,7 +1472,7 @@ void RSDK::Legacy::DrawScaledTintMask(int32 direction, int32 XPos, int32 YPos, i
             int32 w         = width;
             while (w--) {
                 if (*gfxDataPtr > 0)
-                    *frameBufferPtr = tintLookupTable[*gfxDataPtr];
+                    *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                 int32 offsetX = finalscaleX + roundXPos;
                 gfxDataPtr -= offsetX >> 11;
                 gfxPitch += offsetX >> 11;
@@ -1494,7 +1494,7 @@ void RSDK::Legacy::DrawScaledTintMask(int32 direction, int32 XPos, int32 YPos, i
             int32 w         = width;
             while (w--) {
                 if (*gfxData > 0)
-                    *frameBufferPtr = tintLookupTable[*gfxData];
+                    *frameBufferPtr = tintLookupTable[*frameBufferPtr];
                 int32 offsetX = finalscaleX + roundXPos;
                 gfxData += offsetX >> 11;
                 gfxPitch += offsetX >> 11;

@@ -150,8 +150,8 @@ struct ObjectClass {
     std::function<void()> draw;
     std::function<void(void *)> create;
     std::function<void()> stageLoad;
-    std::function<void()> editorDraw;
     std::function<void()> editorLoad;
+    std::function<void()> editorDraw;
     std::function<void()> serialize;
 #if RETRO_REV0U
     std::function<void(Object *)> staticLoad;
@@ -163,8 +163,8 @@ struct ObjectClass {
     void (*draw)();
     void (*create)(void *);
     void (*stageLoad)();
-    void (*editorDraw)();
     void (*editorLoad)();
+    void (*editorDraw)();
     void (*serialize)();
 #if RETRO_REV0U
     void (*staticLoad)(Object *);

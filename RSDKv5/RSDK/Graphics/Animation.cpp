@@ -30,8 +30,12 @@ uint16 RSDK::LoadSpriteAnimation(const char *filePath, uint8 scope)
             break;
     }
 
-    if (id >= SPRFILE_COUNT)
+    if (id >= SPRFILE_COUNT) {
+#if !RETRO_USE_ORIGINAL_CODE
+        PrintLog(PRINT_NORMAL, "Loading Animation %s , but there's no space for animations! \n", fullFilePath);
+#endif
         return -1;
+	}
 
     char nameBuffer[0x8][0x20];
     uint8 sheetIDs[0x18];
@@ -79,6 +83,9 @@ uint16 RSDK::LoadSpriteAnimation(const char *filePath, uint8 scope)
             animation->animationSpeed  = ReadInt16(&info);
             animation->loopIndex       = ReadInt8(&info);
             animation->rotationStyle   = ReadInt8(&info);
+
+            if (animation->frameListOffset + animation->loopIndex >= frameCount)
+                animation->loopIndex = animation->frameCount - 1;
 
             for (int32 f = 0; f < animation->frameCount; ++f) {
                 SpriteFrame *frame = &spr->frames[frameID++];
