@@ -4,6 +4,7 @@
 #include "Helpers.h"
 #include "SigScan.h"
 #include "Symbols.h"
+#include "S3KFunctions.hpp"
 
 #if RETRO_USE_MOD_LOADER
 #define ADD_PUBLIC_FUNC(func) AddPublicFunction(#func, (void *)(func))
@@ -560,6 +561,7 @@ namespace RSDK
 
     void AddPublicFunctions()
     {
+        usePathTracer = (bool *)SigusePathTracer();
 
         for (auto& scan : Symbols::symbols)
             AddPublicFunction(scan.name->c_str(), scan.address);
@@ -585,6 +587,10 @@ namespace RSDK
         ADD_PUBLIC_FUNC(VideoSkipCB);
         ADD_PUBLIC_FUNC(DrawSpecialStageRetryMessage);
         ADD_PUBLIC_FUNC(LoadDefaultOriginsData);
+
+        // Register S3K functions
+        RegisterPublicFunctions();
+        ADD_PUBLIC_FUNC(usePathTracer);
     }
 #endif
 } // namespace RSDK

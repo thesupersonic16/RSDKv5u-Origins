@@ -467,6 +467,7 @@
     <ClCompile Include="..\RSDKv5\main.cpp" />
     <ClCompile Include="..\RSDKv5\Patches.cpp" />
     <ClCompile Include="..\RSDKv5\S3K.cpp" />
+    <ClCompile Include="..\RSDKv5\S3KFunctions.cpp" />
     <ClCompile Include="..\RSDKv5\SigScan.cpp" />
     <ClCompile Include="..\RSDKv5\Symbols.cpp" />
   </ItemGroup>
@@ -484,6 +485,7 @@
     </ClInclude>
     <ClInclude Include="..\RSDKv5\Patches.hpp" />
     <ClInclude Include="..\RSDKv5\S3K.hpp" />
+    <ClInclude Include="..\RSDKv5\S3KFunctions.hpp" />
     <ClInclude Include="..\RSDKv5\SigScan.h" />
     <ClInclude Include="..\RSDKv5\Symbols.h" />
     <ClInclude Include="resource.h" />
