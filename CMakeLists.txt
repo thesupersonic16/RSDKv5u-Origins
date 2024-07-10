@@ -31,6 +31,7 @@ set(RETRO_FILES
     RSDKv5/RSDK/Core/ModAPI.cpp
     RSDKv5/Patches.cpp
     RSDKv5/S3K.cpp
+    RSDKv5/S3KFunctions.cpp
     RSDKv5/SigScan.cpp
     RSDKv5/Symbols.cpp
     RSDKv5/RSDK/Dev/Debug.cpp
