@@ -563,8 +563,8 @@ namespace RSDK
     {
         usePathTracer = (bool *)SigusePathTracer();
 
-        for (auto& scan : Symbols::symbols)
-            AddPublicFunction(scan.name->c_str(), scan.address);
+        for (auto& scan : Symbols::scanResults)
+            AddPublicFunction(scan.name, scan.address);
 
         // Might aswell make everything a public function
         ADD_PUBLIC_FUNC(OnEngineInit);

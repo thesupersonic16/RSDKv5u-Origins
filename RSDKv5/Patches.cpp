@@ -22,9 +22,9 @@ namespace RSDK
         WRITE_MEMORY(((char *)SigAVXPatch() + 0x68), (char)0xF3, (char)0x0F);
         WRITE_MEMORY(((char *)SigAVXPatch() + 0x85), (char)0x66, (char)0x0F, (char)0x7E, (char)0xC0, (char)0xF3, (char)0x0F);
 
-        // Fix coin positioning
-        WRITE_MEMORY(((char *)SigHUD_Draw_E55() + 0x00), (char)0x81, (char)0x45, (char)0x77, (char)0x00, (char)0x00, (char)0xFE, (char)0xFF);
-        WRITE_MEMORY(((char *)SigHUD_Draw_E55() + 0x14), (char)0x81, (char)0x45, (char)0x77, (char)0x00, (char)0x00, (char)0x2C, (char)0x00);
+        // Remove blue sphere log spam
+        WRITE_MEMORY(((char *)SigS3K_SS_Player_Input_Following() + 0x73), (char)0x90, (char)0x90, (char)0x90, (char)0x90, (char)0x90, (char)0x90);
+        WRITE_MEMORY(((char *)SigS3K_SS_Player_Input_Following() + 0x89), (char)0x90, (char)0x90, (char)0x90, (char)0x90, (char)0x90, (char)0x90);
     }
 
 } // namespace RSDK

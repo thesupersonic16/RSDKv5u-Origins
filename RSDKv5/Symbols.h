@@ -1,21 +1,24 @@
 #pragma once
-#include <string>
+#include "RSDK/Core/RetroEngine.hpp"
 #include <vector>
-#include <memory>
 
 namespace Symbols {
     struct SignatureScan {
-        std::string* name;
-        int patternLength;
+        char* name;
+        int8 patternLength;
         char* pattern;
         char* mask;
-        void* hint;
+        int32 offset;
+        int8 hintCount;
+        void** hints;
+    };
+
+    struct SignatureScanResult {
+        char* name;
         void* address;
     };
 
-    extern std::vector<SignatureScan> symbols;
+    extern std::vector<SignatureScanResult> scanResults;
 
-    void loadScanFile(const char* filePath);
-    void parseScanFile();
-    void scanAll();
+    void loadAndProcess(const char* filePath);
 }

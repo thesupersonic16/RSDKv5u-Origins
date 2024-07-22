@@ -346,9 +346,7 @@ extern "C" __declspec(dllexport) void Init(ModInfo *modInfo)
     }
 
 #if RETRO_USE_MOD_LOADER
-    Symbols::loadScanFile("symbols.txt");
-    Symbols::parseScanFile();
-    Symbols::scanAll();
+    Symbols::loadAndProcess("scans.bin");
 #endif
     ModLoaderData = modInfo->ModLoader;
 }

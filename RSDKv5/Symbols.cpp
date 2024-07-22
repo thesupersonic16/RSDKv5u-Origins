@@ -1,136 +1,78 @@
 #include "Symbols.h"
-#include "RSDK/Core/RetroEngine.hpp"
-#include <iostream>
-#include <sstream>
 #include "vector"
-#include "string"
 #include "windows.h"
 #include "SigScan.h"
-#include <Psapi.h>
 
 #if RETRO_USE_MOD_LOADER
 namespace Symbols {
 
-    void* scanFile = nullptr;
-    std::vector<SignatureScan> symbols;
+    void* scanFileBuffer = nullptr;
+    std::vector<SignatureScan> scans;
+    std::vector<SignatureScanResult> scanResults;
 
-    // I did not write this
-    std::vector<std::string> split(const std::string& s, char delimiter)
+    void loadAndProcess(const char* filePath)
     {
-        std::vector<std::string> tokens;
-        std::string token;
-        std::istringstream tokenStream(s);
-        while (std::getline(tokenStream, token, delimiter)) {
-            tokens.push_back(std::move(token));
-        }
-        return tokens;
-    }
+        // Reset
+        if (scanFileBuffer)
+            free(scanFileBuffer);
+        scanFileBuffer = nullptr;
+        scanResults.clear();
 
-    void* hexToPtr(std::string& hex)
-    {
-        void* ptr = nullptr;
-        std::stringstream ss(hex);
-        ss >> std::hex >> ptr;
-
-        if (ss.fail() || ss.peek() != EOF)
-            RSDK::PrintLog(RSDK::PRINT_ERROR, "Invalid hex format: %s", hex.c_str());
-
-        return ptr;
-    }
-
-    char hexToByte(std::string& hex, int offset)
-    {
-        if (offset < 0 || offset >= hex.length() - 1) {
-            RSDK::PrintLog(RSDK::PRINT_ERROR, "Invalid hex offset: %s - %d", hex.c_str(), offset);
-            return '\x00';
-        }
-    
-        return (char)(std::stoi(hex.substr(offset, 2), nullptr, 16));
-    }
-
-    int countPattern(std::string& pattern)
-    {
-        int count = 0;
-        for (int i = 0; i < pattern.length(); ++i)
-            count += (pattern.c_str()[i] == '?') ? 2 : 1;
-        return count / 2;
-    }
-
-    void loadScanFile(const char* filePath)
-    {
-        // Assume all strings are from the same file
-        if (scanFile)
-            free(scanFile);
-        symbols.clear();
-
+        // Load file into memory
         FILE* handle;
-        fopen_s(&handle, filePath, "r");
+        fopen_s(&handle, filePath, "rb");
         if (handle) {
             fseek(handle, 0, SEEK_END);
             int fileSize = ftell(handle);
             fseek(handle, 0, SEEK_SET);
-            scanFile = malloc(fileSize);
-            if (scanFile)
-                fread(scanFile, 1, fileSize, handle);
+            scanFileBuffer = malloc(fileSize);
+            if (scanFileBuffer)
+                fread(scanFileBuffer, 1, fileSize, handle);
             fclose(handle);
         }
-    }
 
-    void parseScanFile()
-    {
-        symbols.clear();
-
-        if (!scanFile)
+        // Parse file
+        if (!scanFileBuffer)
             return;
+        int8* pointer = (int8*)scanFileBuffer;
+        
+        int8 scanCount = *pointer++;
 
-        // Splitting the file contents into lines
-        std::istringstream dataStream((char*)scanFile);
-        std::string line;
-        while (std::getline(dataStream, line)) {
-            if (line.length() == 0 || line[0] == '#')
-                continue;
+        for (int i = 0; i < scanCount; ++i) {
+            SignatureScan scan;
+            pointer++; // Skip version
+            int8 nameLength = *pointer++;
+            scan.name = (char*)pointer;
+            pointer += nameLength;
+            scan.patternLength = *pointer++;
+            scan.pattern = (char*)pointer;
+            pointer += scan.patternLength;
+            scan.mask = (char*)pointer;
+            pointer += scan.patternLength;
+            scan.offset = *(int32*)pointer;
+            pointer += sizeof(int32);
+            pointer++; // Skip type
+            scan.hintCount = *pointer++;
+            scan.hints = (void**)pointer;
+            pointer += sizeof(void*) * scan.hintCount;
+            scans.push_back(scan);
 
-            std::vector<std::string> splits = split(line, '|');
-            if (splits.size() < 3) {
-                RSDK::PrintLog(RSDK::PRINT_ERROR, "Invalid signature scan line: %s", line.c_str());
-                continue;
-            }
-
-            SignatureScan symbol;
-            symbol.name    = new std::string(splits[0]);
-            symbol.patternLength = countPattern(splits[1]);
-            symbol.pattern = (char*)malloc(symbol.patternLength);
-            symbol.mask    = (char*)malloc(symbol.patternLength + 1);
-            symbol.hint    = hexToPtr(splits[2]);
-            
-            // Null byte
-            symbol.mask[symbol.patternLength] = 0;
-            
-            // Convert pattern
-            for (int pi = 0, mi = 0; pi < splits[1].length() && mi < symbol.patternLength; ++pi) {
-                if (splits[1].at(pi) == '?') {
-                    symbol.pattern[mi] = '\x00';
-                    symbol.mask[mi] = '?';
-                }
-                else {
-                    symbol.pattern[mi] = hexToByte(splits[1], pi);
-                    symbol.mask[mi] = 'x';
-                    ++pi; // skip byte
-                }
-                ++mi;
-            }
-
-            symbols.push_back(symbol);
+            // Workaround to convert strings to null-terminated
+            scan.name[nameLength] = '\0';
+            scan.mask[scan.patternLength] = '\0';
         }
-    }
+        RSDK::PrintLog(RSDK::PRINT_NORMAL, "[Symbols] Loaded %i scans", scans.size());
 
-    void scanAll()
-    {
-        for (auto& scan : symbols) {
-            scan.address = sigScan(scan.pattern, scan.mask, scan.hint);
+        // Scan
+        for (auto& scan : scans) {
+            SignatureScanResult result;
+            result.name = scan.name;
+            result.address = sigScan(scan.pattern, scan.mask, scan.hints[0]);
 
-            if (!scan.address)
-                RSDK::PrintLog(RSDK::PRINT_ERROR, "Failed to find address for \"%s\"!", scan.name->c_str());
+            if (!result.address)
+                RSDK::PrintLog(RSDK::PRINT_ERROR, "Failed to find address for \"%s\"!", result.name);
+            
+            scanResults.push_back(result);
         }
     }
 }

@@ -15,4 +15,4 @@ extern void *SigRunCore_0A();
 
 extern void *SigAVXPatch();
 
-extern void *SigHUD_Draw_E55();
+extern void *SigS3K_SS_Player_Input_Following();
