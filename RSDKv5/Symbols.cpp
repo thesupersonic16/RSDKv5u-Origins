@@ -67,8 +67,7 @@ namespace Symbols {
         for (auto& scan : scans) {
             SignatureScanResult result;
             result.name = scan.name;
-            result.address = sigScan(scan.pattern, scan.mask, scan.hints[0]);
-
+            result.address = sigScan(scan.pattern, scan.mask, *scan.hints, scan.hintCount);
             if (!result.address)
                 RSDK::PrintLog(RSDK::PRINT_ERROR, "Failed to find address for \"%s\"!", result.name);
             

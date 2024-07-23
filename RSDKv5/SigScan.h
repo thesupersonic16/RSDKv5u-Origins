@@ -3,7 +3,7 @@
 extern bool SigValid;
 extern const char* InvalidSig;
 
-extern void *sigScan(const char *signature, const char *mask, void *hint);
+extern void *sigScan(const char *signature, const char *mask, void *hint, int hintCount);
 
 extern void *SigusePathTracer();
 extern void *SigLinkGameLogic();
