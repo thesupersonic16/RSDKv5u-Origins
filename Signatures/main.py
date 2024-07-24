@@ -203,11 +203,13 @@ def MenuScan(scan: SigScan, scans: List[SigScan]):
         elif choice == 1:
             print("\033[H\033[J", end="")
             scan.pattern = input("Pattern: ")
-            
+
+            pattern, mask = ConvertPattern(scan.pattern)
+            scan.mask = mask
+
             # Code Pattern
             if scan.pattern.startswith("\\x"):
                 scan.mask = input("Mask: ")
-            pattern, _ = ConvertPattern(scan.pattern)
             scan.pattern = pattern
 
         elif choice == 2:
@@ -252,11 +254,12 @@ def MenuAddScan(scanFile: ScanFile):
     scan = SigScan()
     scan.name = input("Name: ")
     scan.pattern = input("Pattern: ")
+    pattern, mask = ConvertPattern(scan.pattern)
+    scan.mask = mask
     
     # Code Pattern
     if scan.pattern.startswith("\\x"):
         scan.mask = input("Mask: ")
-    pattern, _ = ConvertPattern(scan.pattern)
     scan.pattern = pattern
 
     scan.offset = ConvertHexStringToInt(input("Offset: "))
