@@ -516,6 +516,7 @@ int32 RSDK::PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
 
 void RSDK::SetChannelAttributes(uint8 channel, float volume, float panning, float speed)
 {
+    OnChannelAttributesChanged(&channel, &volume, &panning, &speed);
     if (channel < CHANNEL_COUNT) {
         volume                   = fminf(4.0f, volume);
         volume                   = fmaxf(0.0f, volume);

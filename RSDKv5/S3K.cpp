@@ -254,6 +254,12 @@ namespace RSDK
         return true;
     }
 
+    void OnChannelAttributesChanged(uint8* channel, float* volume, float* panning, float* speed)
+    {
+        if (globalVars->mirrorMode)
+            *panning = -*panning;
+    }
+
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3)
     {
         int32 kinds = 0;
@@ -400,7 +406,7 @@ namespace RSDK
         //AddLoopReplacement("Stage/DrillShort.wav"   , -1    , 0, false);
         
         AddLoopReplacement("Stage/DrillWarble.wav"  , -1    , 0, false);	
-        AddLoopReplacement("Stage/Lava.wav"         , 81870 , 0, false); // Lava sound in LRZ?
+        AddLoopReplacement("Stage/Lava.wav"         , 81870 , -1, false);
         AddLoopReplacement("3K_DEZ/Engine.wav"      , 72263 , 12903, false);
 
         // Music
