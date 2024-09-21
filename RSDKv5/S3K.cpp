@@ -140,13 +140,12 @@ namespace RSDK
     {
         // Flip frame buffer for mirror mode
         if (flipFramebuffer && sceneInfo.currentDrawGroup == 14) {
-            // Remove overscan
-            int32 xSize = currentScreen->size.x + 8;
             memcpy(flipBuffer, currentScreen->frameBuffer, sizeof(flipBuffer));
 
             for (int32 x = 0; x < currentScreen->size.x; x++) {
                 for (int32 y = 0; y < currentScreen->size.y; y++) {
-                    currentScreen->frameBuffer[y * xSize + x] = flipBuffer[y * xSize + (currentScreen->size.x - x)];
+                for (int32 x = 0; x < currentScreen->pitch; x++) {
+                    currentScreen->frameBuffer[y * currentScreen->pitch + x] = flipBuffer[y * currentScreen->pitch + (currentScreen->pitch - x)];
                 }
             }
         }
