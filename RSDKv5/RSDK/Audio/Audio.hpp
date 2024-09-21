@@ -138,7 +138,7 @@ inline void StopAllSfx()
 }
 #endif
 
-void SetChannelAttributes(uint8 channel, float volume, float panning, float speed);
+void SetChannelAttributes(uint32 channel, float volume, float panning, float speed);
 
 inline void StopChannel(uint32 channel)
 {

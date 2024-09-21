@@ -337,7 +337,7 @@ void DrawStatus(const char *str)
 #define BAR_THRESHOLD (10.F)
 #define RENDER_COUNT  (200)
 #else
-#define BAR_THRESHOLD (100.F)
+#define BAR_THRESHOLD (10.F)
 #define RENDER_COUNT  (200)
 #endif
 

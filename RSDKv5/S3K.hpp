@@ -262,7 +262,7 @@ namespace RSDK
     void OnInputProcess();
     void OnSfxPlay(ChannelInfo* info);
     bool32 OnStreamPlay(char **filename, uint32 *slot, uint32 *startPos, uint32 *loopPoint, int32 *speed);
-    void OnChannelAttributesChanged(uint8* channel, float* volume, float* panning, float* speed);
+    void OnChannelAttributesChanged(uint32* channel, float* volume, float* panning, float* speed);
     void OnCallbackNotify(int32 callback, int32 param1, int32 param2, int32 param3);
     void AddLoopReplacement(const char *filename, uint32 oldLoopPoint, uint32 newLoopPoint, bool32 use12FastLoop);
     void RegisterLoopPoints();

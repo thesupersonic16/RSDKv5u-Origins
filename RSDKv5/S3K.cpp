@@ -254,7 +254,7 @@ namespace RSDK
         return true;
     }
 
-    void OnChannelAttributesChanged(uint8* channel, float* volume, float* panning, float* speed)
+    void OnChannelAttributesChanged(uint32* channel, float* volume, float* panning, float* speed)
     {
         if (globalVars->mirrorMode)
             *panning = -*panning;

@@ -251,9 +251,9 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 
 #if RETRO_USE_MOD_LOADER
     char pathLower[0x100];
-    memset(pathLower, 0, sizeof(pathLower));
-    for (int32 c = 0; c < strlen(filename); ++c) pathLower[c] = tolower(filename[c]);
-
+    int32 c = 0;
+    for (; filename[c] != '\0'; ++c) pathLower[c] = tolower(filename[c]);
+    pathLower[c] = '\0';
     bool32 addPath = false;
     int32 m        = modSettings.activeMod != -1 ? modSettings.activeMod : 0;
     for (; m < modList.size(); ++m) {
@@ -278,13 +278,13 @@ bool32 RSDK::LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 
 #if RETRO_REV0U
     if (modSettings.forceScripts && !info->externalFile) {
-        if (std::string(fullFilePath).rfind("Data/Scripts/", 0) == 0 && ends_with(std::string(fullFilePath), "txt")) {
+        std::string fStr(fullFilePath);
+        if (fStr.rfind("Data/Scripts/", 0) == 0 && ends_with(fStr, "txt")) {
             // is a script, since those dont exist normally, load them from "scripts/"
             info->externalFile = true;
             addPath            = true;
-            std::string fStr   = std::string(fullFilePath);
             fStr.erase(fStr.begin(), fStr.begin() + 5); // remove "Data/"
-            StrCopy(fullFilePath, fStr.c_str());
+            strcpy(fullFilePath, fStr.c_str());
         }
     }
 #endif
